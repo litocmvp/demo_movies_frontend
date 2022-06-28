@@ -8,7 +8,9 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "core-js": "^3.8.3",
+    "sweetalert2": "^11.4.17",
     "vue": "^2.6.14",
     "vue-router": "^3.5.1",
     "vuex": "^3.6.2"
@@ -40,7 +42,33 @@
     "parserOptions": {
       "parser": "@babel/eslint-parser"
     },
-    "rules": {}
+    "rules": {
+      "space-before-function-paren": 0,
+      "no-multiple-empty-lines": 0,
+      "eol-last": 0,
+      "indent": 0,
+      "no-trailing-spaces": 0,
+      "semi": 0,
+      "max-len": [
+        "error",
+        {
+          "code": 120,
+          "template": 120,
+          "tabWidth": 2,
+          "comments": 120,
+          "ignorePattern": "",
+          "ignoreComments": false,
+          "ignoreTrailingComments": false,
+          "ignoreUrls": false,
+          "ignoreStrings": false,
+          "ignoreTemplateLiterals": false,
+          "ignoreRegExpLiterals": false,
+          "ignoreHTMLAttributeValues": false,
+          "ignoreHTMLTextContents": false,
+          "prefer-destructuring": ["error", {"object": true, "array": false}]
+        }
+      ]
+    }
   },
   "browserslist": [
     "> 1%",
