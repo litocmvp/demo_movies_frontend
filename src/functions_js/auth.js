@@ -45,8 +45,8 @@ export default {
     logout() {
         store.state.user = 'Anonimo';
         store.state.auth = false;
-        store.state.token = null;
         localStorage.removeItem('access_token');
+        delete axios.defaults.headers.common.Authorization
         router.push('/');
     },
 }

@@ -14,6 +14,10 @@
               <li class="nav-item">
                 <router-link class="nav-link" to="/"> Home </router-link>
               </li>
+              <li class="nav-item" v-if="this.$store.state.auth">
+                 <!-- eslint-disable-next-line max-len -->
+                <router-link class="nav-link" to="/movies/features"><i class="bi bi-gear"> Ajustes</i></router-link>
+              </li>
             <!--
               <li class="nav-item">
                 <router-link class="nav-link" to="/newmovies"> New Movies </router-link>
@@ -21,8 +25,8 @@
             -->
               <li class="nav-item">
                  <!-- eslint-disable-next-line max-len -->
-                <router-link class="nav-link" to="/login" v-if="this.$store.state.user === 'Anonimo'"> {{msg_userform}} </router-link>
-                <button class="nav-link btn btn-link" v-else v-on:click="Logout"> Logout </button>
+                <router-link class="nav-link" to="/auth/login" v-if="this.$store.state.user === 'Anonimo'"> {{msg_userform}} </router-link>
+                <button class="nav-link btn btn-link" v-else v-on:click="logout"> Logout </button>
               </li>
               <li class="nav-item">
                 <!-- eslint-disable-next-line vue/max-attributes-per-line -->
@@ -47,7 +51,7 @@ export default {
     }
   },
   methods: {
-        Logout() {
+        logout() {
             try {
                 auth.logout();
             } catch (error) {

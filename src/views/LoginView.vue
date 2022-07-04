@@ -2,7 +2,7 @@
     <div class="row justify-content-center">
         <div class="col-6">
             <!-- eslint-disable-next-line max-len -->
-            <form v-on:submit.prevent="LoginUser" method="post" class="m-4 p-3 rounded shadow-lg needs-validation animate__animated animate__zoomIn animate__delay-1"
+            <form v-on:submit.prevent="loginUser" method="post" class="m-4 p-3 rounded shadow-lg needs-validation animate__animated animate__zoomIn animate__delay-1"
             style="background-color: #263238;" novalidate>
                 <img class="img-fluid rounded mx-auto d-block mt-3" src="" width="90" alt="">
                 <p class="fs-2 text-white text-center font-monoton">Cartelera CMVP</p>
@@ -36,11 +36,11 @@
                         <div class="d-flex justify-content-center links text-white">
                             ¿No tienes una cuenta?
                             <!-- eslint-disable-next-line max-len -->
-                            <router-link class="mx-1 text-decoration-none" to="/signup"> Registrate </router-link>
+                            <router-link class="mx-1 text-decoration-none" to="/auth/signup"> Registrate </router-link>
                         </div>
                         <div class="d-flex justify-content-center links">
                             <!-- eslint-disable-next-line max-len -->
-                            <router-link class="mx-1 text-decoration-none" to="/user/pwd-reset"> ¿Olvidaste tu contraseña? </router-link>
+                            <router-link class="mx-1 text-decoration-none" to="/auth/pwd-reset"> ¿Olvidaste tu contraseña? </router-link>
                         </div>
                     </div>
                 </div>
@@ -62,7 +62,7 @@ export default {
         }
     },
     methods: {
-        async LoginUser(e) {
+        async loginUser(e) {
             e.preventDefault()
             if (!this.user) {
                 alertaBasica('warning', 'Por favor ingresa un emaíl')

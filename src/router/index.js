@@ -12,7 +12,7 @@ const routes = [
     component: HomeView,
   },
   {
-    path: '/login',
+    path: '/auth/login',
     name: 'login',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -21,7 +21,7 @@ const routes = [
     // meta: { requiresAuth: true },
   },
   {
-    path: '/signup',
+    path: '/auth/signup',
     name: 'signup',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -29,16 +29,25 @@ const routes = [
     component: () => import(/* webpackChunkName: "signup" */ '../views/SignupView.vue'),
   },
   {
-    path: '/user/pwd-reset',
+    path: '/auth/pwd-reset',
     name: 'pwdreset',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "signup" */ '../views/PasswordResetView.vue'),
+    component: () => import(/* webpackChunkName: "pwdreset" */ '../views/PasswordResetView.vue'),
+  },
+  {
+    path: '/movies/features',
+    name: 'features',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "features" */ '../views/FeaturesMoviesView.vue'),
   },
   {
     path: '**',
-    component: () => import(/* webpackChunkName: "signup" */ '../views/NotFoundView.vue'),
+    name: 'notfound',
+    component: () => import(/* webpackChunkName: "notfound" */ '../views/NotFoundView.vue'),
   },
 ];
 
