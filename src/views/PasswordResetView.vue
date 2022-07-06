@@ -58,7 +58,7 @@
 
 <script>
 import axios from 'axios';
-import alertaBasica from '../functions_js/alerts';
+import { alertaBasica } from '@/assets/js/alerts';
 
 const rutaBackend = process.env.VUE_APP_RUTA_API;
 

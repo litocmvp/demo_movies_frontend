@@ -13,6 +13,7 @@
     "sweetalert2": "^11.4.17",
     "vue": "^2.6.14",
     "vue-router": "^3.5.1",
+    "vue-scroll-reveal": "^1.0.11",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
@@ -65,7 +66,13 @@
           "ignoreRegExpLiterals": false,
           "ignoreHTMLAttributeValues": false,
           "ignoreHTMLTextContents": false,
-          "prefer-destructuring": ["error", {"object": true, "array": false}]
+          "prefer-destructuring": [
+            "error",
+            {
+              "object": true,
+              "array": false
+            }
+          ]
         }
       ]
     }

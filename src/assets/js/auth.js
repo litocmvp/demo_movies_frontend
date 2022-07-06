@@ -1,7 +1,7 @@
 import axios from 'axios';
 import store from '@/store';
 import router from '@/router';
-import alertaBasica from './alerts';
+import { alertaBasica } from '@/assets/js/alerts';
 
 const rutaBackend = process.env.VUE_APP_RUTA_API;
 

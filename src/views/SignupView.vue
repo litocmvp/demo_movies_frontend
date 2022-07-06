@@ -49,8 +49,8 @@
 
 <script>
 // eslint-disable-next-line
-import auth from '@/functions_js/auth';
-import alertaBasica from '../functions_js/alerts';
+import auth from '@/assets/js/auth';
+import { alertaBasica } from '@/assets/js/alerts';
 
 export default {
     data() {

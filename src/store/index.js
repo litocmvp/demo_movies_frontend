@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Vue from 'vue';
 import Vuex from 'vuex';
-import alertaBasica from '@/functions_js/alerts';
+import { alertaBasica } from '@/assets/js/alerts';
 
 Vue.use(Vuex);
 
@@ -11,8 +11,8 @@ export default new Vuex.Store({
   state: {
     user: 'Anonimo',
     auth: false,
-    ratings: null,
-    genders: null,
+    ratings: [],
+    genders: [],
     movies: null,
   },
   getters: {
@@ -39,30 +39,37 @@ export default new Vuex.Store({
   },
   actions: {
     async getRating(context) {
-      const conf = {
-        method: 'GET',
-        url: `${rutaBackend}cinema/ratings`,
+      if (this.state.ratings.length === 0) {
+        /* eslint-disable */
+        const conf = {
+          method: 'GET',
+          url: `${rutaBackend}cinema/ratings`,
+        }
+        await axios(conf)
+            .then((resp) => {
+              context.commit('setRatings', resp.data)
+            })
+            .catch((err) => {
+              console.log(`${err.response.data.msg}, status: ${err.response.status}`);
+            });
       }
-      await axios(conf)
-          .then((resp) => {
-            context.commit('setRatings', resp.data)
-          })
-          .catch((err) => {
-            console.log(`${err.response.data.msg}, status: ${err.response.status}`);
-          });
+
     },
     async getGender(context) {
-      const conf = {
-        method: 'GET',
-        url: `${rutaBackend}cinema/genders`,
+      if (this.state.genders.length === 0) {
+        /* eslint-disable */
+        const conf = {
+          method: 'GET',
+          url: `${rutaBackend}cinema/genders`,
+        }
+        await axios(conf)
+            .then((resp) => {
+               context.commit('setGenders', resp.data)
+            })
+            .catch((err) => {
+              alertaBasica('error', `${err.response.data.message}, status: ${err.response.status}`);
+            });
       }
-      await axios(conf)
-          .then((resp) => {
-             context.commit('setGenders', resp.data)
-          })
-          .catch((err) => {
-            alertaBasica('error', `${err.response.data.message}, status: ${err.response.status}`);
-          });
     },
     async getMovies(context) {
       const conf = {

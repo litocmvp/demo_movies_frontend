@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import auth from '@/functions_js/auth';
+import auth from '@/assets/js/auth';
 
 export default {
   data() {
