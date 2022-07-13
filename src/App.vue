@@ -12,11 +12,15 @@
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <router-link class="nav-link" to="/"> Home </router-link>
+                <router-link class="nav-link" to="/"><i class="bi bi-house"> Inicio</i></router-link>
               </li>
               <li class="nav-item" v-if="this.$store.state.auth">
                  <!-- eslint-disable-next-line max-len -->
                 <router-link class="nav-link" to="/movies/features"><i class="bi bi-gear"> Ajustes</i></router-link>
+              </li>
+              <li class="nav-item" v-if="this.$store.state.auth">
+                 <!-- eslint-disable-next-line max-len -->
+                <router-link class="nav-link" to="/movies/add"><i class="bi bi-film"> Registar Películas</i></router-link>
               </li>
             <!--
               <li class="nav-item">
@@ -25,12 +29,13 @@
             -->
               <li class="nav-item">
                  <!-- eslint-disable-next-line max-len -->
-                <router-link class="nav-link" to="/auth/login" v-if="this.$store.state.user === 'Anonimo'"> {{msg_userform}} </router-link>
-                <button class="nav-link btn btn-link" v-else v-on:click="logout"> Logout </button>
+                <router-link class="nav-link" to="/auth/login" v-if="this.$store.state.user === 'Anonimo'"><i class="bi bi-door-open"> {{msg_userform}}</i></router-link>
+                <!-- eslint-disable-next-line -->
+                <button class="nav-link btn btn-link" v-else v-on:click="logout"><i class="bi bi-door-closed"> Cerrar Sesión</i></button>
               </li>
               <li class="nav-item">
-                <!-- eslint-disable-next-line vue/max-attributes-per-line -->
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{{this.$store.state.user}}</a>
+                <!-- eslint-disable-next-line  -->
+                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"><i class="bi bi-person"> {{this.$store.state.user}}</i></a>
               </li>
             </ul>
           </div>
@@ -47,7 +52,7 @@ export default {
   data() {
     return {
       username: this.$store.state.user,
-      msg_userform: 'Login',
+      msg_userform: 'Iniciar Sesión',
     }
   },
   methods: {

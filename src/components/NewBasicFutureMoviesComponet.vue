@@ -154,6 +154,9 @@ export default {
             } else {
               store.state.genders.push(record)
             }
+            this.featureName = '';
+            this.featureDescription = '';
+            this.featurePicture = '';
           })
           .catch((err) => {
             alertaBasica('error', `${err.response.data.message}, status: ${err.response.status}`);

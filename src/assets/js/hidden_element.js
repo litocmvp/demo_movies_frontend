@@ -3,8 +3,8 @@ function hiddenElement(idButton, idTarjet) {
     const tag = document.getElementById(idTarjet);
 
     if (tag.classList.contains('d-none')) {
-        button.classList.remove('bi-caret-down-square');
-        button.classList.add('bi-caret-up-square');
+        button.classList.remove('bi-caret-up-square');
+        button.classList.add('bi-caret-down-square');
         tag.classList.remove('animate__fadeOutUp');
         tag.classList.remove('d-none');
         tag.classList.add('animate__fadeInDown');
@@ -12,8 +12,8 @@ function hiddenElement(idButton, idTarjet) {
             button.setAttribute('data-bs-content', 'Minimizar Sección');
         }
     } else {
-        button.classList.remove('bi-caret-up-square');
-        button.classList.add('bi-caret-down-square');
+        button.classList.remove('bi-caret-down-square');
+        button.classList.add('bi-caret-up-square');
         tag.classList.remove('animate__fadeInDown');
         tag.classList.add('animate__fadeOutUp');
         window.setTimeout(() => { tag.classList.add('d-none') }, 750);

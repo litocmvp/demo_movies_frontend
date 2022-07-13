@@ -13,6 +13,7 @@ export default new Vuex.Store({
     auth: false,
     ratings: [],
     genders: [],
+    myMovies: [],
     movies: null,
   },
   getters: {
@@ -31,6 +32,10 @@ export default new Vuex.Store({
     setGenders(state, payload) {
       state.genders = null;
       state.genders = payload;
+    },
+    setMyMovies(state, payload) {
+      state.myMovies = null;
+      state.myMovies = payload;
     },
     setMovies(state, payload) {
       state.movies = null;
@@ -65,6 +70,22 @@ export default new Vuex.Store({
         await axios(conf)
             .then((resp) => {
                context.commit('setGenders', resp.data)
+            })
+            .catch((err) => {
+              alertaBasica('error', `${err.response.data.message}, status: ${err.response.status}`);
+            });
+      }
+    },
+    async getMyMovies(context) {
+      if (this.state.myMovies.length === 0) {
+        /* eslint-disable */
+        const conf = {
+          method: 'GET',
+          url: `${rutaBackend}cinema/movie`,
+        }
+        await axios(conf)
+            .then((resp) => {
+               context.commit('setMyMovies', resp.data)
             })
             .catch((err) => {
               alertaBasica('error', `${err.response.data.message}, status: ${err.response.status}`);

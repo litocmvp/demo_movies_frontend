@@ -81,7 +81,7 @@ export default {
             }
             try {
                 await auth.add_user(this.user, this.pwd1);
-                this.$router.push('/login');
+                this.$router.push('/auth/login');
             } catch (error) {
                 alertaBasica('error', error)
             }
