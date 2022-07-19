@@ -25,33 +25,33 @@
       </div>
       <div class="col-3" v-if="searchBy != ''">
         <div class="input-group mb-3" v-if="searchBy == '1'">
-          <select class="form-select" aria-label="rating" @change="requestAPI($event.target.value)">
+          <select class="form-select" aria-label="rating" @change="value = $event.target.value">
             <option selected hidden>- Seleccione -</option>
             <option :value='rating.id' v-for="rating in ratings" :key="rating.id">{{rating.rating}}</option>
           </select>
-          <span class="input-group-text"><i class="bi bi-film"></i></span>
+          <span class="input-group-text" role="button" v-on:click="page = 1; requestAPI()"><i class="bi bi-film"> Buscar</i></span>
         </div>
         <div class="input-group mb-3" v-else-if="searchBy == '2'">
-          <select class="form-select" aria-label="gender" @change="requestAPI($event.target.value)">
+          <select class="form-select" aria-label="gender" @change="value = $event.target.value">
             <option selected hidden>- Seleccione -</option>
             <option :value='gender.id' v-for="gender in genders" :key="gender.id">{{gender.gender}}</option>
           </select>
-          <span class="input-group-text"><i class="bi bi-film"></i></span>
+          <span class="input-group-text" role="button" v-on:click="page = 1; requestAPI()"><i class="bi bi-film"> Buscar</i></span>
         </div>
         <div class="input-group mb-3" v-else-if="searchBy == '3'">
-          <input type="number" class="form-select" aria-label="year" @input="requestAPI($event.target.value)">
-          <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+          <input type="number" class="form-select" aria-label="year" @input="value = $event.target.value">
+          <span class="input-group-text" role="button" v-on:click="page = 1; requestAPI()"><i class="bi bi-calendar-date"> Buscar</i></span>
         </div>
         <div class="input-group mb-3" v-else-if="searchBy == '4'">
-          <input type="text" class="form-select text-uppercase" aria-label="title" @input="requestAPI($event.target.value)">
-          <span class="input-group-text"><i class="bi bi-input-cursor-text"></i></span>
+          <input type="text" class="form-select text-uppercase" aria-label="title" @input="value = $event.target.value">
+          <span class="input-group-text" role="button" v-on:click="page = 1; requestAPI()"><i class="bi bi-input-cursor-text"> Buscar</i></span>
         </div>
       </div>
 
     </div>
 
     <!-- API Response -->
-    <div class="border-top row" v-if="results != null">
+    <div class="border-top shadow-lg mt-2 pt-3" v-if="results != null">
       <div class="row row-cols-1 row-cols-md-3 g-1 justify-content-center">
         <div class="card mb-3" style="max-width: 540px;" v-for="movie in results" :key="movie.id">
           <div class="row g-0">
@@ -74,8 +74,22 @@
             </div>
           </div>
         </div>
-
       </div>
+
+      <!-- Buttons to paginate results -->
+      <div class="row d-flex justify-content-between mx-2">
+        <div class="col-auto">
+          <button type="button" class="btn btn-dark" :class="{'d-none': !btnPreview}" @click="page -= 1; requestAPI()">
+            <i class="bi bi-arrow-left-circle"></i>
+          </button>
+        </div>
+        <div class="col-auto">
+          <button type="button" class="btn btn-dark" :class="{'d-none': !btnNext}" @click="page += 1; requestAPI()">
+            <i class="bi bi-arrow-right-circle"></i>
+          </button>
+        </div>
+      </div>
+
     </div>
 
   </div>
@@ -94,7 +108,11 @@ export default {
       ratings: [],
       genders: [],
       searchBy: '',
+      value: '',
       results: null,
+      btnPreview: false,
+      btnNext: false,
+      page: 1,
     }
   },
   methods: {
@@ -110,14 +128,14 @@ export default {
           this.genders = store.state.genders;
       }
     },
-    async requestAPI(search) {
-      if (search != '') {
-
+    async requestAPI() {
+      if (this.value != '') {
         const conf = {
           method: 'Post',
           url: `${rutaBackend}cinema/movies`,
           data: {
-              key: search,
+              key: this.value,
+              page: this.page,
           },
         }
 
@@ -134,7 +152,9 @@ export default {
 
         await axios(conf)
             .then((resp) => {
-                this.results = resp.data;
+              this.results = resp.data.movies;
+              this.btnPreview = resp.data.preview;
+              this.btnNext = resp.data.next;
             })
             .catch((err) => {
                 console.log(err.response);
