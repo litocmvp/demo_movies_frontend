@@ -53,7 +53,7 @@
     <!-- API Response -->
     <div class="border-top shadow-lg mt-2 pt-3" v-if="results != null">
       <div class="row row-cols-1 row-cols-md-3 g-1 justify-content-center">
-        <div class="card mb-3" style="max-width: 540px;" v-for="movie in results" :key="movie.id">
+        <div class="card mb-3" style="max-width: 540px;" v-for="(movie, index) in results" :key="movie.id">
           <div class="row g-0">
             <div class="col-md-4">
               <a :href="movie.preview" target="_blank"><img :src="movie.picture" class="img-fluid rounded-start" :alt="movie.title"></a>
@@ -70,6 +70,11 @@
                 <p class="card-text">
                   <span class="badge rounded-pill bg-secondary mx-1" v-for="gender in movie.gender" :key="gender.id">{{gender.gender}}</span>
                 </p>
+                 <p class="card-text text-end">
+                  <router-link class="btn btn-outline-dark rounded-pill" :to="'/movie/'+movie.slugify" @click.native="selectedMovie(index)">
+                    ver más
+                  </router-link>
+                 </p>
               </div>
             </div>
           </div>
@@ -97,8 +102,9 @@
 
 <script>
 /* eslint-disable */
-import store from '@/store'
+import store from '@/store';
 import axios from 'axios';
+import slugify from 'slugify';
 
 const rutaBackend = process.env.VUE_APP_RUTA_API;
 
@@ -155,6 +161,14 @@ export default {
               this.results = resp.data.movies;
               this.btnPreview = resp.data.preview;
               this.btnNext = resp.data.next;
+
+              // Slufy title
+              if (this.results) {
+                for (let i = 0; i < this.results.length; i += 1) {
+                  this.results[i].slugify = slugify(this.results[i].title, {remove: /[*+~.()'"!:@]/g});
+                }
+              }
+
             })
             .catch((err) => {
                 console.log(err.response);
@@ -163,6 +177,9 @@ export default {
         this.results = null;
       }
 
+    },
+    selectedMovie(id) {
+      store.commit('setMovie', this.results[id]);
     },
   },
   beforeMount() {

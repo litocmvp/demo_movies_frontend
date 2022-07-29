@@ -14,6 +14,7 @@ export default new Vuex.Store({
     ratings: [],
     genders: [],
     myMovies: [],
+    movie: null,
     movies: null,
   },
   getters: {
@@ -40,6 +41,10 @@ export default new Vuex.Store({
     setMovies(state, payload) {
       state.movies = null;
       state.movies = payload;
+    },
+    setMovie(state, payload) {
+      state.movie = null;
+      state.movie = payload;
     },
   },
   actions: {

@@ -10,10 +10,13 @@
   "dependencies": {
     "axios": "^0.27.2",
     "core-js": "^3.8.3",
+    "slugify": "^1.6.5",
     "sweetalert2": "^11.4.17",
     "vue": "^2.6.14",
+    "vue-loading-overlay": "^3.4.2",
     "vue-router": "^3.5.1",
     "vue-scroll-reveal": "^1.0.11",
+    "vue-youtube": "^1.4.0",
     "vuejs-datepicker": "^1.6.2",
     "vuex": "^3.6.2"
   },
