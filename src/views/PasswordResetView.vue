@@ -1,5 +1,21 @@
 <template>
   <div class="row justify-content-center">
+
+    <loading :active="vueLoading.isLoading"
+            :can-cancel="false"
+            :is-full-page="vueLoading.fullPage"
+            :loader="vueLoading.loader"
+            :transition="vueLoading.transition"
+            :color="vueLoading.color"
+            :height="vueLoading.height"
+            :width="vueLoading.width"
+            :background-color="vueLoading.bgColor"
+            :opacity="vueLoading.opacity"
+            :enforce-focus="true"
+            :lock-scroll="true"
+            :blur="vueLoading.blur"
+    />
+
     <div class="col-6">
         <!-- eslint-disable-next-line max-len -->
         <form v-on:submit.prevent="CheckUser" method="post" class="m-4 p-3 rounded shadow-lg needs-validation animate__animated animate__zoomIn animate__delay-1"
@@ -59,6 +75,8 @@
 <script>
 import axios from 'axios';
 import { alertaBasica } from '@/assets/js/alerts';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 const rutaBackend = process.env.VUE_APP_RUTA_API;
 
@@ -69,7 +87,22 @@ export default {
             code: '',
             pwd1: '',
             pwd2: '',
+            vueLoading: {
+                loader: 'bars',
+                isLoading: false,
+                fullPage: true,
+                transition: 'fade',
+                color: '#007BFF',
+                height: '128',
+                width: '128',
+                bgColor: '#000',
+                opacity: '0.9',
+                blur: '2px',
+            },
         }
+    },
+    components: {
+        Loading,
     },
     methods: {
         async CheckUser(e) {
@@ -97,6 +130,7 @@ export default {
                 }
             }
             try {
+                this.vueLoading.isLoading = true;
                 const conf = {
                     method: 'POST',
                     url: `${rutaBackend}user`,
@@ -109,6 +143,7 @@ export default {
                 };
                 axios(conf)
                     .then((resp) => {
+                        this.vueLoading.isLoading = false;
                         /* eslint-disable */
                         // 1ra Comprobación
                         if (document.getElementById('code').classList.contains('d-none') && document.getElementById('pwd1').classList.contains('d-none')) {
@@ -141,6 +176,7 @@ export default {
                         }
                     })
                     .catch((err) => {
+                        this.vueLoading.isLoading = false;
                         let msg = err.response.data.msg ? err.response.data.msg : err.response.data.message
                         alertaBasica('error', msg);
                     });

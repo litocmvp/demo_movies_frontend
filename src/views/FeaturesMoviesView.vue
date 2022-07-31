@@ -1,5 +1,21 @@
 <template>
     <div>
+
+        <loading :active="vueLoading.isLoading"
+            :can-cancel="false"
+            :is-full-page="vueLoading.fullPage"
+            :loader="vueLoading.loader"
+            :transition="vueLoading.transition"
+            :color="vueLoading.color"
+            :height="vueLoading.height"
+            :width="vueLoading.width"
+            :background-color="vueLoading.bgColor"
+            :opacity="vueLoading.opacity"
+            :enforce-focus="true"
+            :lock-scroll="true"
+            :blur="vueLoading.blur"
+        />
+
         <div class="row justify-content-center m-4">
             <div class="d-flex">
                 <!-- eslint-disable-next-line -->
@@ -95,7 +111,8 @@
             inputDescription="Breve Descripción de la Clasificación" inputDescriptionID="newRatingDescID"
             inputPicture="Dirección web (URL) de la imagen con relación a la clasificación"
             inputPictureID="newRatingPicID" btnClose="closeRating"
-            urlBackend="rating">
+            urlBackend="rating"
+            v-on:update_loading="updateVueLoading">
         </NewBasicFutureMoviesComponetVue>
 
         <NewBasicFutureMoviesComponetVue modalID="modalGender" titleID="genderLabel"
@@ -104,7 +121,8 @@
             inputDescription="Breve Descripción del Genero" inputDescriptionID="newGenderDescID"
             inputPicture="Dirección web (URL) de la imagen con relación al genero"
             inputPictureID="newGenderPicID" btnClose="closeGender"
-            urlBackend="gender">
+            urlBackend="gender"
+            v-on:update_loading="updateVueLoading">
         </NewBasicFutureMoviesComponetVue>
 
         <NewBasicFutureMoviesComponetVue modalID="modalModify"
@@ -113,7 +131,8 @@
             inputDescription="Descripción"
             inputPicture="Dirección web (URL) de la imagen"
             btnClose="closeModify"
-            btnAction="modify" methodHttp="Put">
+            btnAction="modify" methodHttp="Put"
+            v-on:update_loading="updateVueLoading">
         </NewBasicFutureMoviesComponetVue>
 
     </div>
@@ -176,6 +195,8 @@ filter:alpha(opacity=100);
 /* eslint-disable */
 import store from '@/store'
 import axios from 'axios';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 import { alertaBasica, confirmDelete } from '@/assets/js/alerts';
 import popover from '@/assets/js/popover'
 import hiddenElement from '@/assets/js/hidden_element'
@@ -187,11 +208,24 @@ export default {
     name: 'BasicFeatureMovieView',
     components: {
         NewBasicFutureMoviesComponetVue,
+        Loading,
     },
     data() {
         return {
             ratings: [],
             genders: [],
+            vueLoading: {
+                loader: 'bars',
+                isLoading: false,
+                fullPage: true,
+                transition: 'fade',
+                color: '#007BFF',
+                height: '128',
+                width: '128',
+                bgColor: '#000',
+                opacity: '0.9',
+                blur: '2px',
+            },
         }
     },
     methods: {
@@ -226,6 +260,7 @@ export default {
         async deleteItem(url) {
             let confirm = await confirmDelete('¿Estas seguro de eliminarlo?');
             if (confirm) {
+                this.vueLoading.isLoading = true;
                 const id = url.match(/(\d+)/);
                 const conf = {
                     method: 'Delete',
@@ -233,6 +268,7 @@ export default {
                 }
                 axios(conf)
                     .then((resp) => {
+                        this.vueLoading.isLoading = false;
                         alertaBasica(resp.data.icon, resp.data.msg);
                         if (url.includes('rating')) {
                             let ratings = store.state.ratings;
@@ -261,10 +297,14 @@ export default {
                         }
                     })
                     .catch((err) => {
+                        this.vueLoading.isLoading = false;
                         alertaBasica('error', `${err.response.data.message}, status: ${err.response.status}`);
                 });
             }
         },
+        updateVueLoading(value) {
+            this.vueLoading.isLoading = value;
+        }
     },
     computed: {
         updateRatings: function() {

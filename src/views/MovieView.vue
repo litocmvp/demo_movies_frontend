@@ -6,6 +6,15 @@
             :can-cancel="false"
             :is-full-page="vueLoading.fullPage"
             :loader="vueLoading.loader"
+            :transition="vueLoading.transition"
+            :color="vueLoading.color"
+            :height="vueLoading.height"
+            :width="vueLoading.width"
+            :background-color="vueLoading.bgColor"
+            :opacity="vueLoading.opacity"
+            :enforce-focus="true"
+            :lock-scroll="true"
+            :blur="vueLoading.blur"
         />
         <div class="row mt-4 p-3 d-none d-md-block">
             <div class="col-12">
@@ -79,7 +88,7 @@ import axios from 'axios';
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 
-const keyRapidAPI = process.env.KEY_RAPID_API;
+const keyRapidAPI = process.env.VUE_APP_KEY_RAPIDAPI;
 
 export default {
     data() {
@@ -117,6 +126,13 @@ export default {
                 loader: 'bars',
                 isLoading: true,
                 fullPage: true,
+                transition: 'fade',
+                color: '#007BFF',
+                height: '128',
+                width: '128',
+                bgColor: '#000',
+                opacity: '0.9',
+                blur: '2px',
             },
 
         }
@@ -164,7 +180,7 @@ export default {
                                     }
                                 }
                             }
-                            this.vueLoading.isLoading = false;
+                            setTimeout(() => { this.vueLoading.isLoading = false; }, 10000);
                         }
 
                     })
@@ -178,12 +194,6 @@ export default {
         playing() {
             this.player.playVideo();
             this.player.mute();
-        },
-        loading() {
-            this.$loading.show({
-                loader: 'bars',
-                color
-            });
         },
     },
     computed: {
@@ -199,7 +209,6 @@ export default {
 
             this.genders = [];
             for(let i = 0; i < this.film.gender.length; i += 1) {
-                console.log(this.film.gender[i].gender);
                 this.genders.push(this.film.gender[i].gender);
             }
 
@@ -214,9 +223,6 @@ export default {
         player() {
             return this.$refs.youtube.player
         }
-    },
-    beforeMount() {
-
     },
 }
 </script>

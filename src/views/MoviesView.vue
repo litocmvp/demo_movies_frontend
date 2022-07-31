@@ -1,6 +1,22 @@
 <template>
     <!-- eslint-disable -->
     <div>
+
+        <loading :active="vueLoading.isLoading"
+            :can-cancel="false"
+            :is-full-page="vueLoading.fullPage"
+            :loader="vueLoading.loader"
+            :transition="vueLoading.transition"
+            :color="vueLoading.color"
+            :height="vueLoading.height"
+            :width="vueLoading.width"
+            :background-color="vueLoading.bgColor"
+            :opacity="vueLoading.opacity"
+            :enforce-focus="true"
+            :lock-scroll="true"
+            :blur="vueLoading.blur"
+        />
+
         <!-- Form -->
         <div class="row justify-content-center m-4">
             <div class="d-flex bg-secondary border-end border-top border-start border-2 rounded-top">
@@ -155,6 +171,8 @@ filter:alpha(opacity=100);
 /* eslint-disable */
 import store from '@/store'
 import axios from 'axios';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 import { alertaBasica, confirmDelete } from '@/assets/js/alerts';
 import popover from '@/assets/js/popover'
 import hiddenElement from '@/assets/js/hidden_element'
@@ -176,11 +194,28 @@ export default {
             allRatings: null,
             allGenders: null,
             idMovie: 0,
+            vueLoading: {
+                loader: 'bars',
+                isLoading: false,
+                fullPage: true,
+                transition: 'fade',
+                color: '#007BFF',
+                height: '128',
+                width: '128',
+                bgColor: '#000',
+                opacity: '0.9',
+                blur: '2px',
+            },
         }
+    },
+    components: {
+        Loading,
     },
     methods: {
         async allMyMovies() {
+            this.vueLoading.isLoading = true;
             await store.dispatch('getMyMovies');
+             this.vueLoading.isLoading = false;
             if(store.state.myMovies.length > 0) {
                 this.myMovies = store.state.myMovies;
             }
@@ -189,6 +224,7 @@ export default {
             return hiddenElement(btn, target)
         },
         async saveMovie() {
+            this.vueLoading.isLoading = true;
             const conf = {
                 method: 'Post',
                 url: `${rutaBackend}cinema/movie`,
@@ -205,6 +241,7 @@ export default {
             }
             axios(conf)
                 .then((resp) => {
+                    this.vueLoading.isLoading = false;
                     alertaBasica(resp.data.icon, resp.data.msg);
                     store.state.myMovies.push(resp.data.record)
                     this.title = '';
@@ -218,6 +255,7 @@ export default {
                     document.getElementById('formBtn').click();
                 })
                 .catch((err) => {
+                    this.vueLoading.isLoading = false;
                     alertaBasica('error', `${err.response.data.message}, status: ${err.response.status}`);
             });
         },
@@ -262,6 +300,7 @@ export default {
             }
         },
         async updateMovie() {
+            this.vueLoading.isLoading = true;
             const conf = {
                 method: 'Put',
                 url: `${rutaBackend}cinema/movie/${this.idMovie}`,
@@ -278,6 +317,7 @@ export default {
             }
             axios(conf)
                 .then((resp) => {
+                    this.vueLoading.isLoading = false;
                     alertaBasica(resp.data.icon, resp.data.msg);
                     this.title = '';
                     this.year = 0;
@@ -303,18 +343,21 @@ export default {
                     }
                 })
                 .catch((err) => {
+                    this.vueLoading.isLoading = false;
                     alertaBasica('error', `${err.response.data.message}, status: ${err.response.status}`);
             });
         },
         async deleteMovie(idMovie) {
             let confirm = await confirmDelete('¿Estas seguro de eliminarlo?');
             if (confirm) {
+                this.vueLoading.isLoading = true;
                 const conf = {
                     method: 'Delete',
                     url: `${rutaBackend}cinema/movie/${idMovie}`,
                 }
                 axios(conf)
                     .then((resp) => {
+                        this.vueLoading.isLoading = false;
                         alertaBasica(resp.data.icon, resp.data.msg);
                         let myStore = store.state.myMovies;
                         bucle:
@@ -326,6 +369,7 @@ export default {
                         }
                     })
                     .catch((err) => {
+                        this.vueLoading.isLoading = false;
                         alertaBasica('error', `${err.response.data.message}, status: ${err.response.status}`);
                 });
             }

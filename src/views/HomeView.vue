@@ -1,6 +1,22 @@
 <template>
   <!-- eslint-disable -->
   <div>
+
+    <loading :active="vueLoading.isLoading"
+            :can-cancel="false"
+            :is-full-page="vueLoading.fullPage"
+            :loader="vueLoading.loader"
+            :transition="vueLoading.transition"
+            :color="vueLoading.color"
+            :height="vueLoading.height"
+            :width="vueLoading.width"
+            :background-color="vueLoading.bgColor"
+            :opacity="vueLoading.opacity"
+            :enforce-focus="true"
+            :lock-scroll="true"
+            :blur="vueLoading.blur"
+      />
+
     <section class="text-center container">
       <div class="row pt-2">
           <div class="col-lg-6 col-md-8 mx-auto">
@@ -105,6 +121,8 @@
 import store from '@/store';
 import axios from 'axios';
 import slugify from 'slugify';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 const rutaBackend = process.env.VUE_APP_RUTA_API;
 
@@ -119,7 +137,22 @@ export default {
       btnPreview: false,
       btnNext: false,
       page: 1,
+      vueLoading: {
+        loader: 'bars',
+        isLoading: false,
+        fullPage: true,
+        transition: 'fade',
+        color: '#007BFF',
+        height: '128',
+        width: '128',
+        bgColor: '#000',
+        opacity: '0.9',
+        blur: '2px',
+      },
     }
+  },
+  components: {
+        Loading,
   },
   methods: {
     async allRatings() {
@@ -136,6 +169,7 @@ export default {
     },
     async requestAPI() {
       if (this.value != '') {
+        this.vueLoading.isLoading = true;
         const conf = {
           method: 'Post',
           url: `${rutaBackend}cinema/movies`,
@@ -158,6 +192,7 @@ export default {
 
         await axios(conf)
             .then((resp) => {
+              this.vueLoading.isLoading = false;
               this.results = resp.data.movies;
               this.btnPreview = resp.data.preview;
               this.btnNext = resp.data.next;
@@ -171,7 +206,8 @@ export default {
 
             })
             .catch((err) => {
-                console.log(err.response);
+              this.vueLoading.isLoading = false;
+              console.log(err.response);
         });
       } else {
         this.results = null;
@@ -183,8 +219,10 @@ export default {
     },
   },
   beforeMount() {
+    this.vueLoading.isLoading = true;
     this.allRatings(),
     this.allGenders()
+    this.vueLoading.isLoading = false;
   },
 };
 </script>

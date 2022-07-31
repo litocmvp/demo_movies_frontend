@@ -1,5 +1,21 @@
 <template>
     <div class="row justify-content-center">
+
+        <loading :active="vueLoading.isLoading"
+            :can-cancel="false"
+            :is-full-page="vueLoading.fullPage"
+            :loader="vueLoading.loader"
+            :transition="vueLoading.transition"
+            :color="vueLoading.color"
+            :height="vueLoading.height"
+            :width="vueLoading.width"
+            :background-color="vueLoading.bgColor"
+            :opacity="vueLoading.opacity"
+            :enforce-focus="true"
+            :lock-scroll="true"
+            :blur="vueLoading.blur"
+        />
+
         <div class="col-6">
             <!-- eslint-disable-next-line max-len -->
             <form v-on:submit.prevent="newUser" class="m-4 p-3 rounded shadow-lg needs-validation animate__animated animate__zoomIn animate__delay-1" style="background-color: #584194;" novalidate>
@@ -51,6 +67,8 @@
 // eslint-disable-next-line
 import auth from '@/assets/js/auth';
 import { alertaBasica } from '@/assets/js/alerts';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
     data() {
@@ -58,11 +76,25 @@ export default {
             user: '',
             pwd1: '',
             pwd2: '',
+            vueLoading: {
+                loader: 'bars',
+                isLoading: false,
+                fullPage: true,
+                transition: 'fade',
+                color: '#007BFF',
+                height: '128',
+                width: '128',
+                bgColor: '#000',
+                opacity: '0.9',
+                blur: '2px',
+            },
         }
     },
+    components: {
+        Loading,
+    },
     methods: {
-        async newUser(e) {
-            e.preventDefault()
+        async newUser() {
             if (!this.user) {
                 alertaBasica('warning', 'Por favor ingresa un emaíl')
                 return
@@ -80,6 +112,7 @@ export default {
                 return
             }
             try {
+                this.vueLoading.isLoading = true;
                 await auth.add_user(this.user, this.pwd1);
                 this.$router.push('/auth/login');
             } catch (error) {

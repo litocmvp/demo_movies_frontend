@@ -126,6 +126,7 @@ export default {
     },
   methods: {
     async saveData() {
+      this.$emit('update_loading', true);
       const conf = {
         method: this.methodHttp,
         url: `${rutaBackend}cinema/${this.urlBackend}`,
@@ -146,6 +147,7 @@ export default {
       /* eslint-disable */
       await axios(conf)
           .then((resp) => {
+            this.$emit('update_loading', false);
             alertaBasica(resp.data.icon, resp.data.msg);
             const record = resp.data.record;
             document.getElementById(this.btnClose).click();
@@ -159,10 +161,12 @@ export default {
             this.featurePicture = '';
           })
           .catch((err) => {
+            this.$emit('update_loading', false);
             alertaBasica('error', `${err.response.data.message}, status: ${err.response.status}`);
           });
     },
     async modifyData() {
+      this.$emit('update_loading', true);
       const conf = {
         method: this.methodHttp,
         url: `${rutaBackend}cinema/${this.featureId}`,
@@ -183,6 +187,7 @@ export default {
       /* eslint-disable */
       await axios(conf)
           .then((resp) => {
+            this.$emit('update_loading', false);
             const record = resp.data.record;
             alertaBasica(resp.data.icon, resp.data.msg);
             document.getElementById(this.btnClose).click();
@@ -217,6 +222,7 @@ export default {
             }
           })
           .catch((err) => {
+            this.$emit('update_loading', false);
             alertaBasica('error', `${err.response.data.message}, status: ${err.response.status}`);
           });
     },

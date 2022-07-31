@@ -1,5 +1,21 @@
 <template>
     <div class="row justify-content-center">
+
+        <loading :active="vueLoading.isLoading"
+            :can-cancel="false"
+            :is-full-page="vueLoading.fullPage"
+            :loader="vueLoading.loader"
+            :transition="vueLoading.transition"
+            :color="vueLoading.color"
+            :height="vueLoading.height"
+            :width="vueLoading.width"
+            :background-color="vueLoading.bgColor"
+            :opacity="vueLoading.opacity"
+            :enforce-focus="true"
+            :lock-scroll="true"
+            :blur="vueLoading.blur"
+        />
+
         <div class="col-6">
             <!-- eslint-disable-next-line max-len -->
             <form v-on:submit.prevent="loginUser" method="post" class="m-4 p-3 rounded shadow-lg needs-validation animate__animated animate__zoomIn animate__delay-1"
@@ -53,13 +69,30 @@
 // eslint-disable-next-line
 import auth from '@/assets/js/auth';
 import { alertaBasica } from '@/assets/js/alerts';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
     data() {
         return {
             user: '',
             pwd: '',
+            vueLoading: {
+                loader: 'bars',
+                isLoading: false,
+                fullPage: true,
+                transition: 'fade',
+                color: '#007BFF',
+                height: '128',
+                width: '128',
+                bgColor: '#000',
+                opacity: '0.9',
+                blur: '2px',
+            },
         }
+    },
+    components: {
+        Loading,
     },
     methods: {
         async loginUser(e) {
@@ -74,7 +107,9 @@ export default {
             }
 
             try {
+                this.vueLoading.isLoading = true;
                 await auth.login(this.user, this.pwd);
+                this.vueLoading.isLoading = false;
             } catch (error) {
                 alertaBasica('error', error)
             }
