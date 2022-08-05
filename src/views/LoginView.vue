@@ -1,4 +1,5 @@
 <template>
+    <!-- eslint-disable max-len -->
     <div class="row justify-content-center">
 
         <loading :active="vueLoading.isLoading"
@@ -17,9 +18,9 @@
         />
 
         <div class="col-6">
-            <!-- eslint-disable-next-line max-len -->
-            <form v-on:submit.prevent="loginUser" method="post" class="m-4 p-3 rounded shadow-lg needs-validation animate__animated animate__zoomIn animate__delay-1"
-            style="background-color: #263238;" novalidate>
+            <form v-on:submit.prevent="loginUser"
+                class="form-group m-4 p-3 rounded shadow-lg animate__animated animate__zoomIn animate__delay-1"
+                style="background-color: #263238;">
                 <img class="img-fluid rounded mx-auto d-block mt-3" src="" width="90" alt="">
                 <p class="fs-2 text-white text-center font-monoton">Cartelera CMVP</p>
 
@@ -28,34 +29,33 @@
                         <span class="input-group-text">
                             <i class="bi bi-at"></i>
                         </span>
-                        <!-- eslint-disable-next-line max-len -->
-                        <input type='email' class='form-control' placeholder='Correo' name='user' aria-labelledby="user" v-model='user'>
-                        <div class="invalid-feedback">
-                            correo invalido
-                        </div>
+                        <input type='email' class='form-control' placeholder='Correo' ref='user' aria-labelledby="user" v-model.trim='$v.user.$model' :class="{ 'border': $v.user.$error, 'border-danger': $v.user.$error }">
+                    </div>
+                    <div class="text-danger" v-if="!$v.user.required">
+                        ingrese su usuario
+                    </div>
+                    <div class="text-danger" v-if="!$v.user.email">
+                        dirección de correo invalido
                     </div>
                     <div class="input-group mt-4" id="pwd">
                         <span class="input-group-text">
                             <i class="bi bi-key-fill"></i>
                         </span>
-                        <!-- eslint-disable-next-line max-len -->
-                        <input type='password' class='form-control' placeholder='Contraseña' name='pwd1' aria-labelledby="pwd" v-model='pwd'>
-                        <div class="invalid-feedback">
-                            requiere el password
-                        </div>
+                        <input type='password' class='form-control' placeholder='Contraseña' ref='pwd' aria-labelledby="pwd" v-model.trim='$v.pwd.$model' :class="{ 'border': $v.pwd.$error, 'border-danger': $v.pwd.$error }">
+                    </div>
+                    <div class="text-danger" v-if="!$v.pwd.required">
+                        ingrese su contraseña
                     </div>
                     <div class="d-grid gap-2 mt-3">
                         <input type='submit' class='btn btn-outline-primary'
-                        value='Verificar Datos'>
+                        value='Verificar Datos' v-bind="buttonAttr">
                     </div>
                     <div class="mt-4">
                         <div class="d-flex justify-content-center links text-white">
                             ¿No tienes una cuenta?
-                            <!-- eslint-disable-next-line max-len -->
                             <router-link class="mx-1 text-decoration-none" to="/auth/signup"> Registrate </router-link>
                         </div>
                         <div class="d-flex justify-content-center links">
-                            <!-- eslint-disable-next-line max-len -->
                             <router-link class="mx-1 text-decoration-none" to="/auth/pwd-reset"> ¿Olvidaste tu contraseña? </router-link>
                         </div>
                     </div>
@@ -66,11 +66,12 @@
 </template>
 
 <script>
-// eslint-disable-next-line
+/* eslint-disable */
 import auth from '@/assets/js/auth';
 import { alertaBasica } from '@/assets/js/alerts';
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
+import { required, email } from 'vuelidate/lib/validators'
 
 export default {
     data() {
@@ -94,14 +95,25 @@ export default {
     components: {
         Loading,
     },
+    validations: {
+        user: {
+            required,
+            email,
+        },
+        pwd: {
+            required,
+        },
+    },
     methods: {
         async loginUser(e) {
             e.preventDefault()
             if (!this.user) {
+                this.$refs.user.focus();
                 alertaBasica('warning', 'Por favor ingresa un emaíl')
                 return
             }
             if (this.pwd.length === 0) {
+                this.$refs.pwd.focus();
                 alertaBasica('warning', 'Por favor ingrese una Contraseña')
                 return
             }
@@ -113,6 +125,13 @@ export default {
             } catch (error) {
                 alertaBasica('error', error)
             }
+        },
+    },
+    computed: {
+        buttonAttr() {
+            return (this.$v.user.$error || this.$v.pwd.$error) === true
+                ? { disabled: true }
+                : { disabled: false }
         },
     },
 }

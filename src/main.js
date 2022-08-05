@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueScrollReveal from 'vue-scroll-reveal';
 import VueYoutube from 'vue-youtube';
+import Vuelidate from 'vuelidate'
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -8,6 +9,7 @@ import store from './store';
 Vue.config.productionTip = false;
 Vue.use(VueScrollReveal);
 Vue.use(VueYoutube);
+Vue.use(Vuelidate);
 
 new Vue({
   router,

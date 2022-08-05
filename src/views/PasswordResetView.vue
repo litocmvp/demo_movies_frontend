@@ -1,82 +1,96 @@
 <template>
-  <div class="row justify-content-center">
+    <!-- eslint-disable max-len -->
+    <div class="row justify-content-center">
 
-    <loading :active="vueLoading.isLoading"
-            :can-cancel="false"
-            :is-full-page="vueLoading.fullPage"
-            :loader="vueLoading.loader"
-            :transition="vueLoading.transition"
-            :color="vueLoading.color"
-            :height="vueLoading.height"
-            :width="vueLoading.width"
-            :background-color="vueLoading.bgColor"
-            :opacity="vueLoading.opacity"
-            :enforce-focus="true"
-            :lock-scroll="true"
-            :blur="vueLoading.blur"
-    />
+        <loading :active="vueLoading.isLoading"
+                :can-cancel="false"
+                :is-full-page="vueLoading.fullPage"
+                :loader="vueLoading.loader"
+                :transition="vueLoading.transition"
+                :color="vueLoading.color"
+                :height="vueLoading.height"
+                :width="vueLoading.width"
+                :background-color="vueLoading.bgColor"
+                :opacity="vueLoading.opacity"
+                :enforce-focus="true"
+                :lock-scroll="true"
+                :blur="vueLoading.blur"
+        />
 
-    <div class="col-6">
-        <!-- eslint-disable-next-line max-len -->
-        <form v-on:submit.prevent="CheckUser" method="post" class="m-4 p-3 rounded shadow-lg needs-validation animate__animated animate__zoomIn animate__delay-1"
-            style="background-color: #263238;" novalidate>
-                <p class="fs-2 text-white text-center font-monoton">Restablecimiento de Contraseña</p>
-                <div class="text-center p-3">
-                    <div class="input-group mt-4" id="user">
-                        <span class="input-group-text">
-                            <i class="bi bi-at"></i>
-                        </span>
-                        <!-- eslint-disable-next-line max-len -->
-                        <input type='email' class='form-control' placeholder='Ingresa tu Correo' name='user' aria-labelledby="user" v-model='email'>
-                        <div class="invalid-feedback">
-                            correo invalido
+        <div class="col-6">
+            <form v-on:submit.prevent="CheckUser" method="post" class="m-4 p-3 rounded shadow-lg animate__animated animate__zoomIn animate__delay-1"
+                style="background-color: #263238;" novalidate>
+                    <p class="fs-2 text-white text-center font-monoton">Restablecimiento de Contraseña</p>
+                    <div class="text-center p-3">
+                        <div class="input-group mt-4" id="user">
+                            <span class="input-group-text">
+                                <i class="bi bi-at"></i>
+                            </span>
+                            <input type='email' class='form-control' placeholder='Ingresa tu Correo' ref='email' aria-labelledby="user" v-model.trim='$v.email.$model' :class="{ 'border': $v.email.$error, 'border-danger': $v.email.$error }">
+                        </div>
+                        <div :class="{ 'd-none': !$v.email.$error }">
+                            <div class="text-danger" v-if="!$v.email.required">
+                                ingrese su dirección de correo
+                            </div>
+                            <div class="text-danger" v-if="!$v.email.email">
+                                dirección de correo invalido
+                            </div>
+                        </div>
+                        <div class="input-group mt-4 d-none" id="code">
+                            <span class="input-group-text">
+                                <i class="bi bi-123"></i>
+                            </span>
+                            <input type='number' class='form-control' placeholder='Ingresa el Código' ref='code' aria-labelledby="code" v-model.number='$v.code.$model' :class="{ 'border': $v.code.$error, 'border-danger': $v.code.$error }">
+                        </div>
+                        <div :class="{ 'd-none': !$v.code.$error }">
+                            <div class="text-danger" v-if="!$v.code.required">
+                                ingrese su código
+                            </div>
+                            <div class="text-danger" v-if="!$v.code.numeric">
+                                el código debe de contener solo números
+                            </div>
+                        </div>
+                        <div class="input-group mt-4 d-none" id="pwd1">
+                            <span class="input-group-text">
+                                <i class="bi bi-key-fill"></i>
+                            </span>
+                            <input type='password' class='form-control' placeholder='Contraseña' v-model.trim='$v.pwd1.$model' ref='pwd1' aria-labelledby="pwd1" :class="{ 'border': $v.pwd1.$error, 'border-danger': $v.pwd1.$error }">
+                        </div>
+                        <div :class="{ 'd-none': !$v.pwd1.$error }">
+                            <div class="text-danger" v-if="!$v.pwd1.required">
+                                ingrese su contraseña
+                            </div>
+                            <div class="text-danger" v-if="!$v.pwd1.minLength">
+                                la contraseña debe de ser de al menos {{$v.pwd1.$params.minLength.min}} caracteres
+                            </div>
+                        </div>
+                        <div class="input-group mt-4 d-none" id="pwd2">
+                            <span class="input-group-text">
+                                <i class="bi bi-key-fill"></i>
+                            </span>
+                            <input type='password' class='form-control' placeholder='Repita la Contraseña' v-model.trim='$v.pwd2.$model' ref='pwd2' aria-labelledby="pwd2" :class="{ 'border': $v.pwd2.$error, 'border-danger': $v.pwd2.$error }">
+                        </div>
+                        <div :class="{ 'd-none': !$v.pwd2.$error }">
+                            <div class="text-danger" v-if="!$v.pwd2.sameAsPwd1">
+                                la contraseñas deben de ser identicas
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2 mt-3">
+                            <input type='submit' class='btn btn-outline-primary' value='Verificar Correo' id="submit" v-bind="buttonAttr">
                         </div>
                     </div>
-                    <div class="input-group mt-4 d-none" id="code">
-                        <span class="input-group-text">
-                            <i class="bi bi-123"></i>
-                        </span>
-                        <!-- eslint-disable-next-line max-len -->
-                        <input type='number' class='form-control' placeholder='Ingresa el Código' name='code' aria-labelledby="code" v-model='code'>
-                        <div class="invalid-feedback">
-                            correo invalido
-                        </div>
-                    </div>
-                    <div class="input-group mt-4 d-none" id="pwd1">
-                        <span class="input-group-text">
-                            <i class="bi bi-key-fill"></i>
-                        </span>
-                        <!-- eslint-disable-next-line max-len -->
-                        <input type='password' class='form-control' placeholder='Contraseña' v-model='pwd1' name='pwd1' aria-labelledby="pwd1">
-                        <div class="invalid-feedback">
-                            requiere el password
-                        </div>
-                    </div>
-                    <div class="input-group mt-4 d-none" id="pwd2">
-                        <span class="input-group-text">
-                            <i class="bi bi-key-fill"></i>
-                        </span>
-                        <!-- eslint-disable-next-line max-len -->
-                        <input type='password' class='form-control' placeholder='Repita la Contraseña' v-model='pwd2' name='pwd2' aria-labelledby="pwd2">
-                        <div class="invalid-feedback">
-                            requiere el password
-                        </div>
-                    </div>
-                    <div class="d-grid gap-2 mt-3">
-                        <!-- eslint-disable-next-line max-len -->
-                        <input type='submit' class='btn btn-outline-primary' value='Verificar Correo' id="submit">
-                    </div>
-                </div>
-            </form>
-    </div>
+                </form>
+        </div>
   </div>
 </template>
 
 <script>
+/* eslint-disable */
 import axios from 'axios';
 import { alertaBasica } from '@/assets/js/alerts';
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
+import { required, email, sameAs, minLength, numeric } from 'vuelidate/lib/validators'
 
 const rutaBackend = process.env.VUE_APP_RUTA_API;
 
@@ -104,28 +118,41 @@ export default {
     components: {
         Loading,
     },
+    validations: {
+        email: {
+            required,
+            email,
+        },
+        code: {
+            required,
+            numeric,
+        },
+        pwd1: {
+            required,
+            minLength: minLength(6),
+        },
+        pwd2: {
+            sameAsPwd1: sameAs('pwd1'),
+        },
+    },
     methods: {
         async CheckUser(e) {
             e.preventDefault()
             if (!this.email) {
+                this.$refs.email.focus();
                 alertaBasica('warning', 'Por favor ingresa un emaíl')
                 return
             }
             if (!document.getElementById('code').classList.contains('d-none') && !this.code) {
+                this.$refs.code.focus();
                 alertaBasica('warning', 'Por favor ingresa el código')
                 return
             }
             if (!document.getElementById('pwd1').classList.contains('d-none')) {
                 if (this.pwd1.length === 0 || this.pwd2.length === 0) {
                     alertaBasica('warning', 'Por favor ingrese una Contraseña')
-                    return
-                }
-                if (this.pwd1.length < 6 || this.pwd2.length < 6) {
-                    alertaBasica('info', 'La Contraseña debe de tener al menos 6 carateres')
-                    return
-                }
-                if (this.pwd1 !== this.pwd2) {
-                    alertaBasica('info', 'Contraseñas no iguales')
+                    if (this.pwd1.length === 0) this.$refs.pwd1.focus();
+                    if (this.pwd2.length === 0) this.$refs.pwd2.focus();
                     return
                 }
             }
@@ -183,6 +210,13 @@ export default {
             } catch (error) {
                 alertaBasica('error', error)
             }
+        },
+    },
+    computed: {
+        buttonAttr() {
+            return ((this.$v.email.$error || this.$v.code.$error) || (this.$v.pwd1.$error || this.$v.pwd2.$error)) === true
+                ? { disabled: true }
+                : { disabled: false }
         },
     },
 };
