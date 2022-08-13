@@ -24,49 +24,96 @@
                 <div class="d-inline mx-2"><i class="bi bi-caret-up-square" v-on:click="hidden('formBtn', 'formBox')" role="button" id="formBtn" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Minimizar Sección"></i></div>
             </div>
             <form class="animate__animated p-2 bg-light border-end border-bottom border-start border-2 rounded-bottom shadow d-none" id="formBox">
-                <div class="input-group mb-3">
-                    <i class="bi bi-pencil input-group-text"></i>
-                    <input class='form-control form-control-sm' name='title' type='text' placeholder="Título de la película" aria-label="title" v-model='title'>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <i class="bi bi-pencil input-group-text"></i>
+                        <input class='form-control form-control-sm' ref='title' type='text' placeholder="Título de la película" aria-label="title" v-model.trim='$v.title.$model' :class="{ 'border': $v.title.$error, 'border-danger': $v.title.$error }">
+                    </div>
+                    <div class="text-danger" v-if="!$v.title.required">
+                        ingrese el  Titulo
+                    </div>
                 </div>
-                <div class="input-group mb-3">
-                    <i class="bi bi-calendar input-group-text">Año</i>
-                    <input class='form-control form-control-sm' name='year' type='number' min="1900" max="2023" aria-label="year" v-model='year'>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <i class="bi bi-calendar input-group-text">Año</i>
+                        <input class='form-control form-control-sm' ref='year' type='number' min="1900" max="2023" aria-label="year" v-model.number='$v.year.$model' :class="{ 'border': $v.year.$error, 'border-danger': $v.year.$error }">
+                    </div>
+                    <div class="text-danger" v-if="!$v.year.required">
+                        ingrese el  año de la pelicula
+                    </div>
+                    <div class="text-danger" v-if="!$v.year.numeric">
+                        formato de fecha incorrecta
+                    </div>
+                    <div class="text-danger" v-if="!$v.year.between">
+                        el año de la pelicula debe de ser entre el año {{$v.year.$params.between.min}} y el año {{$v.year.$params.between.max}}
+                    </div>
                 </div>
-                <div class="input-group mb-3">
-                    <i class="bi bi-watch input-group-text">Duración</i>
-                    <input class='form-control form-control-sm' name='time' type='number' step=".01" aria-label="time" v-model='time'>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <i class="bi bi-watch input-group-text">Duración</i>
+                        <input class='form-control form-control-sm' ref='time' type='number' step=".01" aria-label="time" v-model.number='$v.time.$model' :class="{ 'border': $v.time.$error, 'border-danger': $v.time.$error }">
+                    </div>
+                    <div class="text-danger" v-if="!$v.time.required">
+                        ingrese el  tiempo de duración de la película
+                    </div>
+                    <div class="text-danger" v-if="!$v.time.decimal">
+                        formato de tiempo incorrecto
+                    </div>
                 </div>
-                <div class="input-group mb-3">
-                    <i class="bi bi-pencil-square input-group-text">Sinopsis</i>
-                    <textarea class='form-control form-control-sm' name="plot" aria-label="plot" cols="30" rows="5" v-model='plot'></textarea>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <i class="bi bi-pencil-square input-group-text">Sinopsis</i>
+                        <textarea class='form-control form-control-sm' ref="plot" aria-label="plot" cols="30" rows="5" v-model='$v.plot.$model' :class="{ 'border': $v.plot.$error, 'border-danger': $v.plot.$error }"></textarea>
+                    </div>
+                    <div class="text-danger" v-if="!$v.plot.required">
+                        ingrese el resumen de la película
+                    </div>
+                    <div class="text-danger" v-if="!$v.plot.minLength || !$v.plot.maxLength">
+                        el resumen debe de contener entre {{$v.plot.$params.minLength.min}} y {{$v.plot.$params.maxLength.max}} caracteres
+                    </div>
                 </div>
-                <div class="input-group mb-3">
-                    <i class="bi bi-card-image input-group-text"></i>
-                    <input class='form-control form-control-sm' name='picture' type='text' placeholder="Imagen de Portada (URL)" aria-label="picture" v-model='picture'>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <i class="bi bi-card-image input-group-text"></i>
+                        <input class='form-control form-control-sm' ref='picture' type='text' placeholder="Imagen de Portada (URL)" aria-label="picture" v-model='$v.picture.$model' :class="{ 'border': $v.picture.$error, 'border-danger': $v.picture.$error }">
+                    </div>
+                    <img :src="srcImage" alt="preview_default" ref="imgPreview" width="200" height="auto">
+                    <div class="text-danger" v-if="!$v.picture.required">
+                        ingrese la URL de la imagen
+                    </div>
+                    <div class="text-danger" v-if="!$v.picture.url">
+                        formato de la URL incorrecto
+                    </div>
                 </div>
-                <div class="input-group mb-3">
-                    <i class="bi bi-youtube input-group-text"></i>
-                    <input class='form-control form-control-sm' name='preview' type='text' placeholder="Video de Vista Previa (URL)" aria-label="preview" v-model='preview'>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <i class="bi bi-collection-play input-group-text">Clasificación</i>
+                        <select class="form-select" ref='rating' aria-label="rating" v-model='$v.rating.$model' :class="{ 'border': $v.rating.$error, 'border-danger': $v.rating.$error }">
+                            <option selected hidden value="">- Seleccione -</option>
+                            <option v-for="rating in allRatings" :key="rating.id" :value='rating.id'>{{rating.rating}}</option>
+                        </select>
+                    </div>
+                    <div class="text-danger" v-if="!$v.rating.required">
+                        seleccione una clasificación
+                    </div>
                 </div>
-                <div class="input-group mb-3">
-                    <i class="bi bi-collection-play input-group-text">Clasificación</i>
-                    <select class="form-select" name='rating' aria-label="rating" v-model='rating'>
-                        <option selected hidden value="">- Seleccione -</option>
-                        <option v-for="rating in allRatings" :key="rating.id" :value='rating.id'>{{rating.rating}}</option>
-                    </select>
-                </div>
-                <div class="input-group mb-3">
-                    <i class="bi bi-list-check input-group-text">Genero(s)</i>
-                    <select class="form-select" name='gender' aria-label="gender" multiple v-model='genders'>
-                        <option selected hidden value="">- Seleccione -</option>
-                        <option v-for="gender in allGenders" :key="gender.id" :value='gender.id'>{{gender.gender}}</option>
-                    </select>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <i class="bi bi-list-check input-group-text">Genero(s)</i>
+                        <select class="form-select" ref='gender' aria-label="gender" multiple v-model='$v.genders.$model' :class="{ 'border': $v.genders.$error, 'border-danger': $v.genders.$error }">
+                            <option selected hidden value="">- Seleccione -</option>
+                            <option v-for="gender in allGenders" :key="gender.id" :value='gender.id'>{{gender.gender}}</option>
+                        </select>
+                    </div>
+                    <div class="text-danger" v-if="!$v.genders.required">
+                        seleccione los generos correspondiestes a la película
+                    </div>
                 </div>
                 <div class="d-grid gap-2" id="btnSave">
-                    <input type="submit" class="btn btn-outline-success" value="Envíar Datos"  v-on:click.prevent="saveMovie">
+                    <input type="submit" class="btn btn-outline-success" value="Envíar Datos"  v-on:click.prevent="saveMovie" v-bind="buttonAttr">
                 </div>
                 <div class="d-grid gap-2 d-none" id="btnUpdate">
-                    <input type="submit" class="btn btn-outline-warning" value="Modificar Datos"  v-on:click.prevent="updateMovie">
+                    <input type="submit" class="btn btn-outline-warning" value="Modificar Datos"  v-on:click.prevent="updateMovie" v-bind="buttonAttr">
                 </div>
             </form>
         </div>
@@ -173,11 +220,13 @@ import store from '@/store'
 import axios from 'axios';
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
+import { required, minLength, url, maxLength, decimal, between, numeric} from 'vuelidate/lib/validators'
 import { alertaBasica, confirmDelete } from '@/assets/js/alerts';
 import popover from '@/assets/js/popover'
 import hiddenElement from '@/assets/js/hidden_element'
 
 const rutaBackend = process.env.VUE_APP_RUTA_API;
+const currentYear = new Date().getFullYear();
 
 export default {
     data() {
@@ -188,12 +237,13 @@ export default {
             time: 0,
             plot: '',
             picture: '',
-            preview: '',
             rating: '',
             genders: [],
             allRatings: null,
             allGenders: null,
             idMovie: 0,
+            srcPreview: require('@/assets/img/preview.jpg'),
+            srcImage: '',
             vueLoading: {
                 loader: 'bars',
                 isLoading: false,
@@ -211,6 +261,35 @@ export default {
     components: {
         Loading,
     },
+    validations: {
+        title: {
+            required,
+        },
+        year: {
+            required,
+            numeric,
+            between: between(1910, currentYear)
+        },
+        time: {
+            required,
+            decimal,
+        },
+        plot: {
+            required,
+            minLength: minLength(30),
+            maxLength: maxLength(600),
+        },
+        picture: {
+            required,
+            url,
+        },
+        rating: {
+            required,
+        },
+        genders: {
+            required,
+        },
+    },
     methods: {
         async allMyMovies() {
             this.vueLoading.isLoading = true;
@@ -224,6 +303,47 @@ export default {
             return hiddenElement(btn, target)
         },
         async saveMovie() {
+            if (!this.title || this.title?.length == 0) {
+                alertaBasica('warning', 'Titulo de la película no ingresado')
+                this.$refs.title.focus();
+                return
+            }
+            if (!this.year || this.year?.length == 0) {
+                alertaBasica('warning', 'Año de la película no ingresado')
+                this.$refs.year.focus();
+                return
+            }
+            if (!this.time || this.time?.length == 0) {
+                alertaBasica('warning', 'Tiempo de duración de la película no ingresado')
+                this.$refs.time.focus();
+                return
+            }
+            if (!this.plot || this.plot?.length == 0) {
+                alertaBasica('warning', 'Resumen de la película no ingresado')
+                this.$refs.plot.focus();
+                return
+            }
+            if (!this.picture || this.picture?.length == 0) {
+                alertaBasica('warning', 'URL de la imagen no ingresada')
+                this.$refs.picture.focus();
+                return
+            }
+            if (!(/\.(jpg|jpeg|png|webp)$/.test(this.picture))) {
+                alertaBasica('warning', 'La URL no contiene una imagen')
+                this.$refs.picture.focus();
+                return
+            }
+            if (!this.rating || this.rating?.length == 0) {
+                alertaBasica('warning', 'Clasificación de la película no seleccionado')
+                this.$refs.rating.focus();
+                return
+            }
+            if (!this.genders || this.genders?.length == 0) {
+                alertaBasica('warning', 'Generos de la película no seleccionado(s)')
+                this.$refs.genders.focus();
+                return
+            }
+
             this.vueLoading.isLoading = true;
             const conf = {
                 method: 'Post',
@@ -236,7 +356,6 @@ export default {
                     duration: String(this.time).replace('.', ':'),
                     gender: this.genders,
                     picture: this.picture,
-                    preview: this.preview,
                 },
             }
             axios(conf)
@@ -249,7 +368,6 @@ export default {
                     this.time = 0;
                     this.plot = '';
                     this.picture = '';
-                    this.preview = '';
                     this.rating = '';
                     this.genders = [];
                     document.getElementById('formBtn').click();
@@ -289,9 +407,9 @@ export default {
                     this.time = parseFloat(obj.duration.replace(':', '.'));
                     this.plot = obj.synopsis;
                     this.picture = obj.picture;
-                    this.preview = obj.preview;
                     this.rating = obj.rating;
 
+                    this.genders = [];
                     for (let j = 0; j < obj.gender.length; j += 1) {
                         this.genders.push(obj.gender[j].id);
                     }
@@ -300,6 +418,47 @@ export default {
             }
         },
         async updateMovie() {
+            if (!this.title || this.title?.length == 0) {
+                alertaBasica('warning', 'Titulo de la película no ingresado')
+                this.$refs.title.focus();
+                return
+            }
+            if (!this.year || this.year?.length == 0) {
+                alertaBasica('warning', 'Año de la película no ingresado')
+                this.$refs.year.focus();
+                return
+            }
+            if (!this.time || this.time?.length == 0) {
+                alertaBasica('warning', 'Tiempo de duración de la película no ingresado')
+                this.$refs.time.focus();
+                return
+            }
+            if (!this.plot || this.plot?.length == 0) {
+                alertaBasica('warning', 'Resumen de la película no ingresado')
+                this.$refs.plot.focus();
+                return
+            }
+            if (!this.picture || this.picture?.length == 0) {
+                alertaBasica('warning', 'URL de la imagen no ingresada')
+                this.$refs.picture.focus();
+                return
+            }
+            if (!(/\.(jpg|jpeg|png|webp)$/.test(this.picture))) {
+                alertaBasica('warning', 'La URL no contiene una imagen')
+                this.$refs.picture.focus();
+                return
+            }
+            if (!this.rating || this.rating?.length == 0) {
+                alertaBasica('warning', 'Clasificación de la película no seleccionado')
+                this.$refs.rating.focus();
+                return
+            }
+            if (!this.genders || this.genders?.length == 0) {
+                alertaBasica('warning', 'Generos de la película no seleccionado(s)')
+                this.$refs.genders.focus();
+                return
+            }
+
             this.vueLoading.isLoading = true;
             const conf = {
                 method: 'Put',
@@ -312,7 +471,6 @@ export default {
                     duration: String(this.time).replace('.', ':'),
                     gender: this.genders,
                     picture: this.picture,
-                    preview: this.preview,
                 },
             }
             axios(conf)
@@ -324,7 +482,6 @@ export default {
                     this.time = 0;
                     this.plot = '';
                     this.picture = '';
-                    this.preview = '';
                     this.rating = '';
                     this.genders = [];
                     document.getElementById('formBtn').click();
@@ -378,12 +535,24 @@ export default {
     computed: {
         updateMyMovies: function() {
              this.myMovies = store.state.myMovies;
+        },
+        buttonAttr() {
+            return ((((this.$v.title.$error || this.$v.plot.$error) || (this.$v.year.$error || this.$v.time.$error)) || (this.$v.picture.$error || this.$v.rating.$error)) || this.$v.genders.$error) === true
+                ? { disabled: true }
+                : { disabled: false }
+        },
+    },
+    watch: {
+        picture(value) {
+            if (value.length == 0) this.srcImage = this.srcPreview;
+            else this.srcImage = value;
         }
     },
     beforeMount() {
-        this.allRatings = store.state.ratings,
-        this.allGenders = store.state.genders,
-        this.allMyMovies()
+        this.allRatings = store.state.ratings;
+        this.allGenders = store.state.genders;
+        this.allMyMovies();
+        this.srcImage = this.srcPreview;
     },
     beforeUpdate() {
         popover();

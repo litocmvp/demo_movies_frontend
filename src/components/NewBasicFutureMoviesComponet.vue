@@ -1,5 +1,5 @@
 <template>
-  <!-- eslint-disable-next-line max-len -->
+  <!-- eslint-disable max-len -->
   <div class='modal fade' :id='modalID' tabindex='-1' :aria-labelledby='titleID' aria-hidden='true'>
     <div class='modal-dialog'>
       <div class='modal-content'>
@@ -12,26 +12,38 @@
             <div class='modal-body'>
                 <div class='mb-3'>
                     <label :for='inputNameID' class='form-label'>{{inputName}}
-                      <!-- eslint-disable-next-line max-len -->
-                      <input class='form-control form-control-sm' :id='inputNameID' name='featureName' type='text' v-model='featureName'>
+                      <input class='form-control form-control-sm' :id='inputNameID' ref='featureName' type='text' v-model.trim='$v.featureName.$model' :class="{ 'border': $v.featureName.$error, 'border-danger': $v.featureName.$error }">
                     </label>
+                    <div class="text-danger" v-if="!$v.featureName.required">
+                      ingrese el  Titulo
+                    </div>
                 </div>
                 <div class='mb-3'>
                     <label :for='inputDescriptionID' class='form-label'>{{inputDescription}}
-                      <!-- eslint-disable-next-line max-len -->
-                      <input class='form-control form-control-sm' :id='inputDescriptionID' name='featureDescription' type='text'  v-model='featureDescription'>
+                      <textarea class='form-control form-control-sm' :id='inputDescriptionID' ref='featureDescription' col="3" rows="3" v-model='$v.featureDescription.$model' :class="{ 'border': $v.featureDescription.$error, 'border-danger': $v.featureDescription.$error }"></textarea>
                     </label>
+                    <div class="text-danger" v-if="!$v.featureDescription.required">
+                        ingrese la Descripción
+                    </div>
+                    <div class="text-danger" v-if="!$v.featureDescription.minLength || !$v.featureDescription.maxLength">
+                        la descripcion debe contener al menos {{$v.featureDescription.$params.minLength.min}} caracteres y maximo {{$v.featureDescription.$params.maxLength.max}}
+                    </div>
                 </div>
                 <div class='mb-3'>
                     <label :for='inputPictureID' class='form-label'>{{inputPicture}}
-                      <!-- eslint-disable-next-line max-len -->
-                      <input class='form-control form-control-sm' :id='inputPictureID' name='featurePicture' type='text'  v-model='featurePicture'>
+                      <input class='form-control form-control-sm' :id='inputPictureID' ref='featurePicture' type='text'  v-model.trim='$v.featurePicture.$model' :class="{ 'border': $v.featurePicture.$error, 'border-danger': $v.featurePicture.$error }">
                     </label>
+                    <div class="text-danger" v-if="!$v.featurePicture.required">
+                        ingrese la URL de la imagen con relación al registro
+                    </div>
+                    <div class="text-danger" v-if="!$v.featurePicture.url">
+                        dirección URL erronea
+                    </div>
                 </div>
             </div>
             <div class='modal-footer'>
               <button type='button' class='btn btn-secondary' data-bs-dismiss='modal' :id='btnClose'>Cerrar</button>
-              <button type='submit' class='btn btn-primary'>Guardar Registro</button>
+              <button type='submit' class='btn btn-primary' v-bind="buttonAttr">Guardar Registro</button>
             </div>
         </form>
         <!-- Modify Form -->
@@ -42,31 +54,42 @@
             </div>
             <div class='modal-body'>
                 <div class='mb-3'>
-                      <!-- eslint-disable-next-line max-len -->
                       <input class='form-control form-control-sm' id='hiddenId' name='hiddenItem' type='hidden' v-model='featureId'>
                 </div>
                 <div class='mb-3'>
                     <label :for='inputNameID' class='form-label'>{{inputName}}
-                      <!-- eslint-disable-next-line max-len -->
-                      <input class='form-control form-control-sm' :id='inputNameID' name='featureName' type='text' v-model='featureName'>
+                      <input class='form-control form-control-sm' :id='inputNameID' ref='featureName' type='text' v-model.trim='$v.featureName.$model' :class="{ 'border': $v.featureName.$error, 'border-danger': $v.featureName.$error }">
                     </label>
+                    <div class="text-danger" v-if="!$v.featureName.required">
+                      ingrese el  Titulo
+                  </div>
                 </div>
                 <div class='mb-3'>
                     <label :for='inputDescriptionID' class='form-label'>{{inputDescription}}
-                      <!-- eslint-disable-next-line max-len -->
-                      <input class='form-control form-control-sm' :id='inputDescriptionID' name='featureDescription' type='text'  v-model='featureDescription'>
+                      <textarea class='form-control form-control-sm' :id='inputDescriptionID' ref='featureDescription' col="3" rows="3" v-model='$v.featureDescription.$model' :class="{ 'border': $v.featureDescription.$error, 'border-danger': $v.featureDescription.$error }"></textarea>
                     </label>
+                    <div class="text-danger" v-if="!$v.featureDescription.required">
+                        ingrese la Descripción
+                    </div>
+                    <div class="text-danger" v-if="!$v.featureDescription.minLength || !$v.featureDescription.maxLength">
+                        la descripcion debe contener al menos {{$v.featureDescription.$params.minLength.min}} caracteres y maximo {{$v.featureDescription.$params.maxLength.max}}
+                    </div>
                 </div>
                 <div class='mb-3'>
                     <label :for='inputPictureID' class='form-label'>{{inputPicture}}
-                      <!-- eslint-disable-next-line max-len -->
-                      <input class='form-control form-control-sm' :id='inputPictureID' name='featurePicture' type='text'  v-model='featurePicture'>
+                      <input class='form-control form-control-sm' :id='inputPictureID' ref='featurePicture' type='text'  v-model.trim='$v.featurePicture.$model' :class="{ 'border': $v.featurePicture.$error, 'border-danger': $v.featurePicture.$error }">
                     </label>
+                    <div class="text-danger" v-if="!$v.featurePicture.required">
+                        ingrese la URL de la imagen con relación al registro
+                    </div>
+                    <div class="text-danger" v-if="!$v.featurePicture.url">
+                        dirección URL erronea
+                    </div>
                 </div>
             </div>
             <div class='modal-footer'>
               <button type='button' class='btn btn-secondary' data-bs-dismiss='modal' :id='btnClose'>Cerrar</button>
-              <button type='submit' class='btn btn-warning'>Modificar Registro</button>
+              <button type='submit' class='btn btn-warning' v-bind="buttonAttr">Modificar Registro</button>
             </div>
         </form>
       </div>
@@ -75,8 +98,10 @@
 </template>
 
 <script>
+/* eslint-disable */
 import store from '@/store';
 import axios from 'axios';
+import { required, minLength, url, maxLength } from 'vuelidate/lib/validators'
 import { alertaBasica } from '@/assets/js/alerts';
 
 const rutaBackend = process.env.VUE_APP_RUTA_API;
@@ -123,9 +148,40 @@ export default {
           featureDescription: null,
           featurePicture: null,
         }
-    },
+  },
+  validations: {
+        featureName: {
+            required,
+        },
+        featureDescription: {
+            required,
+            minLength: minLength(10),
+            maxLength: maxLength(60),
+        },
+        featurePicture: {
+            required,
+            url,
+        },
+  },
   methods: {
     async saveData() {
+
+      if (this.featureName?.length == 0 || !this.featureName) {
+        alertaBasica('warning', 'Por favor ingresa el titulo')
+        this.$refs.featureName.focus();
+        return
+      }
+      if (this.featureDescription?.length == 0 || !this.featureDescription) {
+        alertaBasica('warning', 'Por favor ingresa la descripción')
+        this.$refs.featureDescription.focus();
+        return
+      }
+      if (this.featurePicture?.length == 0 || !this.featurePicture) {
+        alertaBasica('warning', 'Por favor ingresa la imagen')
+        this.$refs.featurePicture.focus();
+        return
+      }
+
       this.$emit('update_loading', true);
       const conf = {
         method: this.methodHttp,
@@ -136,7 +192,7 @@ export default {
           picture: this.featurePicture,
         },
       }
-      /* eslint-disable */
+
       // Cambio de clave (key) en la constante objeto "conf" en su clave "conf.data"
       if (this.urlBackend.includes('rating')) {
         delete Object.assign(conf.data, { ['rating']: conf.data['name'] })['name'];
@@ -144,7 +200,6 @@ export default {
         delete Object.assign(conf.data, { ['gender']: conf.data['name'] })['name'];
       }
 
-      /* eslint-disable */
       await axios(conf)
           .then((resp) => {
             this.$emit('update_loading', false);
@@ -176,7 +231,7 @@ export default {
           picture: this.featurePicture,
         },
       }
-      /* eslint-disable */
+
       // Cambio de clave (key) en la constante objeto "conf" en su clave "conf.data"
       if (this.featureId.includes('rating')) {
         delete Object.assign(conf.data, { ['rating']: conf.data['name'] })['name'];
@@ -184,7 +239,6 @@ export default {
         delete Object.assign(conf.data, { ['gender']: conf.data['name'] })['name'];
       }
 
-      /* eslint-disable */
       await axios(conf)
           .then((resp) => {
             this.$emit('update_loading', false);
@@ -227,6 +281,13 @@ export default {
           });
     },
   },
+  computed: {
+        buttonAttr() {
+            return (this.$v.featureName.$error || (this.$v.featureDescription.$error || this.$v.featurePicture.$error)) === true
+                ? { disabled: true }
+                : { disabled: false }
+        },
+    },
 };
 </script>
 
