@@ -217,7 +217,7 @@ export default {
           })
           .catch((err) => {
             this.$emit('update_loading', false);
-            alertaBasica('error', `${err.response.data.message}, status: ${err.response.status}`);
+            alertaBasica('error', `${err.response.data.msg}, status: ${err.response.status}`);
           });
     },
     async modifyData() {
@@ -277,7 +277,7 @@ export default {
           })
           .catch((err) => {
             this.$emit('update_loading', false);
-            alertaBasica('error', `${err.response.data.message}, status: ${err.response.status}`);
+            alertaBasica('error', `${err.response.data.msg}, status: ${err.response.status}`);
           });
     },
   },

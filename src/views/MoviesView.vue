@@ -374,7 +374,7 @@ export default {
                 })
                 .catch((err) => {
                     this.vueLoading.isLoading = false;
-                    alertaBasica('error', `${err.response.data.message}, status: ${err.response.status}`);
+                    alertaBasica('error', `${err.response.data.msg}, status: ${err.response.status}`);
             });
         },
         refillForm(idMovie){
@@ -501,7 +501,7 @@ export default {
                 })
                 .catch((err) => {
                     this.vueLoading.isLoading = false;
-                    alertaBasica('error', `${err.response.data.message}, status: ${err.response.status}`);
+                    alertaBasica('error', `${err.response.data.msg}, status: ${err.response.status}`);
             });
         },
         async deleteMovie(idMovie) {
@@ -527,7 +527,7 @@ export default {
                     })
                     .catch((err) => {
                         this.vueLoading.isLoading = false;
-                        alertaBasica('error', `${err.response.data.message}, status: ${err.response.status}`);
+                        alertaBasica('error', `${err.response.data.msg}, status: ${err.response.status}`);
                 });
             }
         },

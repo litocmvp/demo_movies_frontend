@@ -20,13 +20,8 @@
               </li>
               <li class="nav-item" v-if="this.$store.state.auth">
                  <!-- eslint-disable-next-line max-len -->
-                <router-link class="nav-link" to="/movies/add"><i class="bi bi-film"> Registar Películas</i></router-link>
+                <router-link class="nav-link" to="/my_movies"><i class="bi bi-film"> Registar Películas</i></router-link>
               </li>
-            <!--
-              <li class="nav-item">
-                <router-link class="nav-link" to="/newmovies"> New Movies </router-link>
-              </li>
-            -->
               <li class="nav-item">
                  <!-- eslint-disable-next-line max-len -->
                 <router-link class="nav-link" to="/auth/login" v-if="this.$store.state.user === 'Anonimo'"><i class="bi bi-door-open"> {{msg_userform}}</i></router-link>

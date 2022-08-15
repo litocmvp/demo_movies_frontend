@@ -43,14 +43,16 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "features" */ '../views/FeaturesMoviesView.vue'),
+    meta: { requiresAuth: true },
   },
   {
-    path: '/movies/add',
+    path: '/my_movies',
     name: 'movies',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "movies" */ '../views/MoviesView.vue'),
+    meta: { requiresAuth: true },
   },
   {
     path: '/movie/:slugifyTitleMovie',
@@ -59,6 +61,7 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "movie" */ '../views/MovieView.vue'),
+    meta: { requiresAuth: true },
   },
   {
     path: '**',
@@ -76,7 +79,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.matched.some((route) => route.meta.requiresAuth)) {
     if (store.state.auth !== true) {
-      next('/login');
+      next('/auth/login');
     } else {
       next();
     }

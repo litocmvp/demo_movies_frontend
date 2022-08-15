@@ -77,7 +77,7 @@ export default new Vuex.Store({
                context.commit('setGenders', resp.data)
             })
             .catch((err) => {
-              alertaBasica('error', `${err.response.data.message}, status: ${err.response.status}`);
+              alertaBasica('error', `${err.response.data.msg}, status: ${err.response.status}`);
             });
       }
     },
@@ -93,7 +93,7 @@ export default new Vuex.Store({
                context.commit('setMyMovies', resp.data)
             })
             .catch((err) => {
-              alertaBasica('error', `${err.response.data.message}, status: ${err.response.status}`);
+              alertaBasica('error', `${err.response.data.msg}, status: ${err.response.status}`);
             });
       }
     },
@@ -107,7 +107,7 @@ export default new Vuex.Store({
              context.commit('setMovies', resp.data)
           })
           .catch((err) => {
-            alertaBasica('error', `${err.response.data.message}, status: ${err.response.status}`);
+            alertaBasica('error', `${err.response.data.msg}, status: ${err.response.status}`);
           });
     },
   },

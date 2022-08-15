@@ -19,7 +19,9 @@ export default {
             .then((resp) => {
                 alertaBasica('success', `Registro exitoso del usuario: ${resp.data.user}`);
             })
-            .catch((err) => console.log(err));
+            .catch((err) => {
+                alertaBasica('error', `${err.response.data.msg}, status: ${err.response.status}`);
+            });
     },
     login(email, password) {
         const conf = {
