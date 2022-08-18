@@ -33,6 +33,9 @@
                     <label :for='inputPictureID' class='form-label'>{{inputPicture}}
                       <input class='form-control form-control-sm' :id='inputPictureID' ref='featurePicture' type='text'  v-model.trim='$v.featurePicture.$model' :class="{ 'border': $v.featurePicture.$error, 'border-danger': $v.featurePicture.$error }">
                     </label>
+                    <div>
+                      <img :src="srcImage" alt="preview_default" ref="imgPreview" width="200" height="auto">
+                    </div>
                     <div class="text-danger" v-if="!$v.featurePicture.required">
                         ingrese la URL de la imagen con relación al registro
                     </div>
@@ -79,6 +82,9 @@
                     <label :for='inputPictureID' class='form-label'>{{inputPicture}}
                       <input class='form-control form-control-sm' :id='inputPictureID' ref='featurePicture' type='text'  v-model.trim='$v.featurePicture.$model' :class="{ 'border': $v.featurePicture.$error, 'border-danger': $v.featurePicture.$error }">
                     </label>
+                    <div>
+                      <img :src="srcImage" alt="preview_default" ref="imgPreview" width="200" height="auto">
+                    </div>
                     <div class="text-danger" v-if="!$v.featurePicture.required">
                         ingrese la URL de la imagen con relación al registro
                     </div>
@@ -101,10 +107,11 @@
 /* eslint-disable */
 import store from '@/store';
 import axios from 'axios';
-import { required, minLength, url, maxLength } from 'vuelidate/lib/validators'
+import { required, minLength, url, maxLength } from 'vuelidate/lib/validators';
 import { alertaBasica } from '@/assets/js/alerts';
 
 const rutaBackend = process.env.VUE_APP_RUTA_API;
+const srcPreview = require('@/assets/img/preview.jpg');
 
 export default {
   name: 'BasicFuturesMovie',
@@ -147,6 +154,7 @@ export default {
           featureName: null,
           featureDescription: null,
           featurePicture: null,
+          srcImage: srcPreview,
         }
   },
   validations: {
@@ -282,12 +290,20 @@ export default {
     },
   },
   computed: {
-        buttonAttr() {
-            return (this.$v.featureName.$error || (this.$v.featureDescription.$error || this.$v.featurePicture.$error)) === true
-                ? { disabled: true }
-                : { disabled: false }
-        },
+    buttonAttr() {
+        return (this.$v.featureName.$error || (this.$v.featureDescription.$error || this.$v.featurePicture.$error)) === true
+            ? { disabled: true }
+            : { disabled: false }
     },
+  },
+  watch: {
+    featurePicture(value) {
+        if (value.length > 0) {
+          return this.srcImage = value;
+        }
+        this.srcImage = srcPreview;
+    }
+  },
 };
 </script>
 

@@ -55,12 +55,21 @@
           <span class="input-group-text" role="button" v-on:click="page = 1; requestAPI()"><i class="bi bi-film"> Buscar</i></span>
         </div>
         <div class="input-group mb-3" v-else-if="searchBy == '3'">
-          <input type="number" class="form-select" aria-label="year" @input="value = $event.target.value">
+          <input type="number" min="1900" :max="currentYear" class="form-select" aria-label="year" v-model.number='$v.value.$model' :class="{ 'border': $v.value.$error, 'border-danger': $v.value.$error }">
           <span class="input-group-text" role="button" v-on:click="page = 1; requestAPI()"><i class="bi bi-calendar-date"> Buscar</i></span>
         </div>
         <div class="input-group mb-3" v-else-if="searchBy == '4'">
           <input type="text" class="form-select text-uppercase" aria-label="title" @input="value = $event.target.value">
           <span class="input-group-text" role="button" v-on:click="page = 1; requestAPI()"><i class="bi bi-input-cursor-text"> Buscar</i></span>
+        </div>
+
+        <div v-if="searchBy == '3'">
+          <div class="text-danger" v-if="!$v.value.numeric">
+            formato de fecha incorrecta
+          </div>
+          <div class="text-danger" v-if="!$v.value.between">
+              el año de la pelicula debe de ser entre el año {{$v.value.$params.between.min}} y el año {{$v.value.$params.between.max}}
+          </div>
         </div>
       </div>
 
@@ -123,6 +132,8 @@ import axios from 'axios';
 import slugify from 'slugify';
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
+import { requiredIf, between, numeric} from 'vuelidate/lib/validators'
+import { alertaBasica } from '@/assets/js/alerts';
 
 const rutaBackend = process.env.VUE_APP_RUTA_API;
 
@@ -137,6 +148,7 @@ export default {
       btnPreview: false,
       btnNext: false,
       page: 1,
+      currentYear: new Date().getFullYear(),
       vueLoading: {
         loader: 'bars',
         isLoading: false,
@@ -196,7 +208,7 @@ export default {
               this.results = resp.data.movies;
               this.btnPreview = resp.data.preview;
               this.btnNext = resp.data.next;
-
+              console.log(resp.data.movies);
               // Slufy title
               if (this.results) {
                 for (let i = 0; i < this.results.length; i += 1) {
@@ -207,7 +219,8 @@ export default {
             })
             .catch((err) => {
               this.vueLoading.isLoading = false;
-              console.log(err.response);
+              this.results = [];
+              alertaBasica('error', `${err.response.data.msg}, status: ${err.response.status}`);
         });
       } else {
         this.results = null;
@@ -216,6 +229,15 @@ export default {
     },
     selectedMovie(id) {
       store.commit('setMovie', this.results[id]);
+    },
+  },
+  validations: {
+    value: {
+        required: requiredIf(function(){
+          return this.searchBy == '3';
+        }),
+        numeric,
+        between: between(1910, new Date().getFullYear())
     },
   },
   beforeMount() {

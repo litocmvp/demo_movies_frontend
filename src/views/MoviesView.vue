@@ -36,7 +36,7 @@
                 <div class="mb-3">
                     <div class="input-group">
                         <i class="bi bi-calendar input-group-text">Año</i>
-                        <input class='form-control form-control-sm' ref='year' type='number' min="1900" max="2023" aria-label="year" v-model.number='$v.year.$model' :class="{ 'border': $v.year.$error, 'border-danger': $v.year.$error }">
+                        <input class='form-control form-control-sm' ref='year' type='number' min="1900" :max="currentYear" aria-label="year" v-model.number='$v.year.$model' :class="{ 'border': $v.year.$error, 'border-danger': $v.year.$error }">
                     </div>
                     <div class="text-danger" v-if="!$v.year.required">
                         ingrese el  año de la pelicula
@@ -51,12 +51,12 @@
                 <div class="mb-3">
                     <div class="input-group">
                         <i class="bi bi-watch input-group-text">Duración</i>
-                        <input class='form-control form-control-sm' ref='time' type='number' step=".01" aria-label="time" v-model.number='$v.time.$model' :class="{ 'border': $v.time.$error, 'border-danger': $v.time.$error }">
+                        <vue-timepicker class='form-control form-control-sm' ref='time' v-model='$v.time.$model' :class="{ 'border': $v.time.$error, 'border-danger': $v.time.$error }"></vue-timepicker>
                     </div>
                     <div class="text-danger" v-if="!$v.time.required">
-                        ingrese el  tiempo de duración de la película
+                        ingrese el tiempo de duración de la película
                     </div>
-                    <div class="text-danger" v-if="!$v.time.decimal">
+                    <div class="text-danger" v-if="!$v.time.formatTime">
                         formato de tiempo incorrecto
                     </div>
                 </div>
@@ -220,12 +220,15 @@ import store from '@/store'
 import axios from 'axios';
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
-import { required, minLength, url, maxLength, decimal, between, numeric} from 'vuelidate/lib/validators'
+import { required, minLength, url, maxLength, between, numeric} from 'vuelidate/lib/validators'
+import VueTimepicker from 'vue2-timepicker';
+import 'vue2-timepicker/dist/VueTimepicker.css';
 import { alertaBasica, confirmDelete } from '@/assets/js/alerts';
 import popover from '@/assets/js/popover'
 import hiddenElement from '@/assets/js/hidden_element'
 
 const rutaBackend = process.env.VUE_APP_RUTA_API;
+const formatTime = (value) => !/\D:\d|\d:\D/.test(value);
 const currentYear = new Date().getFullYear();
 
 export default {
@@ -233,8 +236,8 @@ export default {
         return {
             myMovies: [],
             title: '',
-            year: 0,
-            time: 0,
+            year: currentYear,
+            time: '01:00',
             plot: '',
             picture: '',
             rating: '',
@@ -260,6 +263,7 @@ export default {
     },
     components: {
         Loading,
+        VueTimepicker,
     },
     validations: {
         title: {
@@ -268,11 +272,11 @@ export default {
         year: {
             required,
             numeric,
-            between: between(1910, currentYear)
+            between: between(1910, new Date().getFullYear())
         },
         time: {
             required,
-            decimal,
+            formatTime,
         },
         plot: {
             required,
@@ -294,7 +298,7 @@ export default {
         async allMyMovies() {
             this.vueLoading.isLoading = true;
             await store.dispatch('getMyMovies');
-             this.vueLoading.isLoading = false;
+            this.vueLoading.isLoading = false;
             if(store.state.myMovies.length > 0) {
                 this.myMovies = store.state.myMovies;
             }
@@ -303,6 +307,7 @@ export default {
             return hiddenElement(btn, target)
         },
         async saveMovie() {
+
             if (!this.title || this.title?.length == 0) {
                 alertaBasica('warning', 'Titulo de la película no ingresado')
                 this.$refs.title.focus();
@@ -353,7 +358,7 @@ export default {
                     rating: this.rating,
                     year: this.year,
                     synopsis: this.plot,
-                    duration: String(this.time).replace('.', ':'),
+                    duration: this.time,
                     gender: this.genders,
                     picture: this.picture,
                 },
@@ -364,8 +369,8 @@ export default {
                     alertaBasica(resp.data.icon, resp.data.msg);
                     store.state.myMovies.push(resp.data.record)
                     this.title = '';
-                    this.year = 0;
-                    this.time = 0;
+                    this.year = currentYear;
+                    this.time = '01:00';
                     this.plot = '';
                     this.picture = '';
                     this.rating = '';
@@ -404,7 +409,7 @@ export default {
                     this.idMovie = idMovie;
                     this.title = obj.title;
                     this.year = obj.year;
-                    this.time = parseFloat(obj.duration.replace(':', '.'));
+                    this.time = obj.duration;
                     this.plot = obj.synopsis;
                     this.picture = obj.picture;
                     this.rating = obj.rating;
@@ -468,7 +473,7 @@ export default {
                     rating: this.rating,
                     year: this.year,
                     synopsis: this.plot,
-                    duration: String(this.time).replace('.', ':'),
+                    duration:this.time,
                     gender: this.genders,
                     picture: this.picture,
                 },
@@ -478,8 +483,8 @@ export default {
                     this.vueLoading.isLoading = false;
                     alertaBasica(resp.data.icon, resp.data.msg);
                     this.title = '';
-                    this.year = 0;
-                    this.time = 0;
+                    this.year = currentYear;
+                    this.time = '01:00';
                     this.plot = '';
                     this.picture = '';
                     this.rating = '';
