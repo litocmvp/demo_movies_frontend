@@ -55,7 +55,7 @@ export default {
             try {
                 auth.logout();
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
         },
     },

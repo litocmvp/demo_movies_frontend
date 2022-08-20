@@ -158,6 +158,46 @@
             {{updateMyMovies}}
         </div>
 
+        <!-- Movies by other Users Only visible for admin user -->
+        <div class="row justify-content-center m-4" v-if="otherMovies.length > 0">
+            <div class="d-flex">
+                <div class="d-inline mx-2"><h3 class="text-muted fst-italic text-cencer">Películas de otros Usuarios</h3></div>
+                <div class="d-inline mx-2"><i class="bi bi-caret-down-square" v-on:click="hidden('otherMoviesbtn', 'otherMoviesBox')" role="button" id="otherMoviesbtn" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Minimizar Sección"></i></div>
+            </div>
+            <div class="col-12">
+                <div class="row row-cols-1 row-cols-md-3 g-1 animate__animated" id="otherMoviesBox">
+                    <!-- eslint-disable-next-line -->
+                    <div class="col hvr-grow" v-for="movie in otherMovies" :key="movie.id" v-scroll-reveal>
+                        <div class="card bg-dark text-white h-100 hovereffect">
+                            <!-- eslint-disable-next-line max-len -->
+                            <img :src='movie.picture' class="card-img" alt="...">
+                            <div class="card-img-overlay transbox">
+                                <h5 class="card-title">{{movie.title}}</h5>
+                                <!-- eslint-disable-next-line max-len -->
+                                <p class="card-text text-truncate">{{movie.synopsis}}</p>
+                                <div class="mb-1">
+                                    <i class="bi bi-calendar mx-1"> {{movie.year}}</i> | <i class="bi bi-clock mx-1"> {{movie.duration}}</i>
+                                </div>
+                                <span class="badge rounded-pill bg-secondary mx-1" v-for="gender in movie.gender" :key="gender.id">{{gender.gender}}</span>
+                                <div class="overlay">
+                                    <!-- eslint-disable max-len -->
+                                    <button type="button" class="btn btn-outline-warning mx-3"
+                                        v-on:click="refillForm(movie.id, false)">
+                                        <i class="bi bi-input-cursor-text"></i> Modificar
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger mx-3"
+                                        v-on:click="deleteMovie(movie.id, false)">
+                                        <i class="bi bi-file-earmark-x"></i> Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{updateOtherMovies}}
+        </div>
+
     </div>
 </template>
 
@@ -235,6 +275,7 @@ export default {
     data() {
         return {
             myMovies: [],
+            otherMovies: [],
             title: '',
             year: currentYear,
             time: '01:00',
@@ -259,6 +300,7 @@ export default {
                 opacity: '0.9',
                 blur: '2px',
             },
+            mine: null,
         }
     },
     components: {
@@ -302,6 +344,9 @@ export default {
             if(store.state.myMovies.length > 0) {
                 this.myMovies = store.state.myMovies;
             }
+            if(store.state.movies.length > 0) {
+                this.otherMovies = store.state.movies;
+            }
         },
         hidden(btn, target) {
             return hiddenElement(btn, target)
@@ -330,11 +375,6 @@ export default {
             }
             if (!this.picture || this.picture?.length == 0) {
                 alertaBasica('warning', 'URL de la imagen no ingresada')
-                this.$refs.picture.focus();
-                return
-            }
-            if (!(/\.(jpg|jpeg|png|webp)$/.test(this.picture))) {
-                alertaBasica('warning', 'La URL no contiene una imagen')
                 this.$refs.picture.focus();
                 return
             }
@@ -382,7 +422,7 @@ export default {
                     alertaBasica('error', `${err.response.data.msg}, status: ${err.response.status}`);
             });
         },
-        refillForm(idMovie){
+        refillForm(idMovie, mine = true){
             const formBtn = document.getElementById('formBtn');
             const legend = document.getElementById('legendForm');
             const btnSave = document.getElementById('btnSave');
@@ -402,9 +442,11 @@ export default {
                 btnUpdate.classList.remove('d-none');
             }
 
+            this.mine = mine
+            const films = mine ? this.myMovies : this.otherMovies;
             bucle:
-            for (let i = 0; i < this.myMovies.length; i += 1) {
-                let obj = this.myMovies[i];
+            for (let i = 0; i < films.length; i += 1) {
+                const obj = films[i];
                 if (obj.id == idMovie) {
                     this.idMovie = idMovie;
                     this.title = obj.title;
@@ -445,11 +487,6 @@ export default {
             }
             if (!this.picture || this.picture?.length == 0) {
                 alertaBasica('warning', 'URL de la imagen no ingresada')
-                this.$refs.picture.focus();
-                return
-            }
-            if (!(/\.(jpg|jpeg|png|webp)$/.test(this.picture))) {
-                alertaBasica('warning', 'La URL no contiene una imagen')
                 this.$refs.picture.focus();
                 return
             }
@@ -494,12 +531,18 @@ export default {
                     document.getElementById('btnSave').classList.remove('d-none');
                     document.getElementById('btnUpdate').classList.add('d-none');
 
+                    const films = this.mine ? this.myMovies : this.otherMovies;
                     bucle:
-                    for (let i = 0; i < store.state.myMovies.length; i += 1) {
-                        let obj = store.state.myMovies[i];
+                    for (let i = 0; i < films.length; i += 1) {
+                        const obj = films[i];
                         if (obj.id == this.idMovie) {
-                            store.state.myMovies[i] = resp.data.record;
+                            if (this.mine) {
+                                store.state.myMovies[i] = resp.data.record;
+                            } else {
+                                store.state.movies[i] = resp.data.record;
+                            }
                             this.idMovie = 0;
+                            this.mine = null;
                             break bucle;
                         }
                     }
@@ -509,7 +552,7 @@ export default {
                     alertaBasica('error', `${err.response.data.msg}, status: ${err.response.status}`);
             });
         },
-        async deleteMovie(idMovie) {
+        async deleteMovie(idMovie, mine = true) {
             let confirm = await confirmDelete('¿Estas seguro de eliminarlo?');
             if (confirm) {
                 this.vueLoading.isLoading = true;
@@ -521,11 +564,16 @@ export default {
                     .then((resp) => {
                         this.vueLoading.isLoading = false;
                         alertaBasica(resp.data.icon, resp.data.msg);
-                        let myStore = store.state.myMovies;
+
+                        const myStore = mine ? store.state.myMovies : store.state.movies;
                         bucle:
                         for (let i = 0; i < myStore.length; i += 1) {
                             if (myStore[i].id == idMovie) {
-                                store.state.myMovies.splice(i, 1);
+                                if (mine) {
+                                    store.state.myMovies.splice(i, 1);
+                                } else {
+                                    store.state.movies.splice(i, 1);
+                                }
                                 break bucle;
                             }
                         }
@@ -540,6 +588,9 @@ export default {
     computed: {
         updateMyMovies: function() {
              this.myMovies = store.state.myMovies;
+        },
+        updateOtherMovies: function() {
+             this.otherMovies = store.state.movies;
         },
         buttonAttr() {
             return ((((this.$v.title.$error || this.$v.plot.$error) || (this.$v.year.$error || this.$v.time.$error)) || (this.$v.picture.$error || this.$v.rating.$error)) || this.$v.genders.$error) === true

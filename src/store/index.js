@@ -15,7 +15,7 @@ export default new Vuex.Store({
     genders: [],
     myMovies: [],
     movie: null,
-    movies: null,
+    movies: [],
   },
   getters: {
   },
@@ -90,25 +90,13 @@ export default new Vuex.Store({
         }
         await axios(conf)
             .then((resp) => {
-               context.commit('setMyMovies', resp.data)
+               context.commit('setMyMovies', resp.data.myMovies)
+               if (resp.data.otherMovies.length > 0) context.commit('setMovies', resp.data.otherMovies)
             })
             .catch((err) => {
               alertaBasica('error', `${err.response.data.msg}, status: ${err.response.status}`);
             });
       }
-    },
-    async getMovies(context) {
-      const conf = {
-        method: 'GET',
-        url: `${rutaBackend}movies`,
-      }
-      await axios(conf)
-          .then((resp) => {
-             context.commit('setMovies', resp.data)
-          })
-          .catch((err) => {
-            alertaBasica('error', `${err.response.data.msg}, status: ${err.response.status}`);
-          });
     },
   },
   modules: {

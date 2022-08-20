@@ -208,7 +208,7 @@ export default {
               this.results = resp.data.movies;
               this.btnPreview = resp.data.preview;
               this.btnNext = resp.data.next;
-              console.log(resp.data.movies);
+
               // Slufy title
               if (this.results) {
                 for (let i = 0; i < this.results.length; i += 1) {

@@ -47,6 +47,9 @@ export default {
     logout() {
         store.state.user = 'Anonimo';
         store.state.auth = false;
+        store.state.myMovies = [];
+        store.state.movie = null;
+        store.state.movies = [];
         localStorage.removeItem('access_token');
         delete axios.defaults.headers.common.Authorization
         router.push('/');
