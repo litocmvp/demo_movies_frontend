@@ -272,6 +272,10 @@ const formatTime = (value) => !/\D:\d|\d:\D/.test(value);
 const currentYear = new Date().getFullYear();
 
 export default {
+    name: 'MoviesView',
+    created() {
+        document.title = 'CMVP Movies Demo - My Movies CRUD';
+    },
     data() {
         return {
             myMovies: [],

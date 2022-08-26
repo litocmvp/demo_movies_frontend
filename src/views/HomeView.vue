@@ -138,6 +138,10 @@ import { alertaBasica } from '@/assets/js/alerts';
 const rutaBackend = process.env.VUE_APP_RUTA_API;
 
 export default {
+  name: 'HomeView',
+  created() {
+      document.title = 'CMVP Movies Demo - Home';
+  },
   data() {
     return {
       ratings: [],

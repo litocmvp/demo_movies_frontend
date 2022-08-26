@@ -95,6 +95,10 @@ import { required, email, sameAs, minLength, numeric } from 'vuelidate/lib/valid
 const rutaBackend = process.env.VUE_APP_RUTA_API;
 
 export default {
+    name: 'UserRestoreView',
+    created() {
+        document.title = 'CMVP Movies Demo - Restore User Password';
+    },
     data() {
         return {
             email: '',

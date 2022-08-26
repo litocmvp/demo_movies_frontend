@@ -119,7 +119,7 @@ export default {
     return {
       username: this.$store.state.user,
       msg_userform: 'Iniciar Sesión',
-      cmvpLogo: require('@/assets/img/logo_cmvp.png'),
+      cmvpLogo: require('@/assets/img/logo_cmvp.webp'),
     }
   },
   methods: {

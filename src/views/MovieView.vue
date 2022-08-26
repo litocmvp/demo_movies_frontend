@@ -91,6 +91,10 @@ import 'vue-loading-overlay/dist/vue-loading.css';
 const keyRapidAPI = process.env.VUE_APP_KEY_RAPIDAPI;
 
 export default {
+    name: 'MovieView',
+    created() {
+        document.title = `CMVP Movies Demo - Movie: ${store.state.movie.title}`;
+    },
     data() {
         return {
             film: '',

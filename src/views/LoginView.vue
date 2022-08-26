@@ -74,6 +74,10 @@ import 'vue-loading-overlay/dist/vue-loading.css';
 import { required, email } from 'vuelidate/lib/validators'
 
 export default {
+    name: 'LoginView',
+    created() {
+        document.title = 'CMVP Movies Demo - LogIn';
+    },
     data() {
         return {
             user: '',

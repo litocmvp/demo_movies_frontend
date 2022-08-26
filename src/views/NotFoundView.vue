@@ -7,3 +7,14 @@
         </div>
     </div>
 </template>
+
+<script>
+
+export default {
+    name: 'NotFoudView',
+    created() {
+        document.title = 'CMVP Movies Demo - Not Found Resource';
+    },
+}
+
+</script>

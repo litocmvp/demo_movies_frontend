@@ -246,3 +246,14 @@
 
   </div>
 </template>
+
+<script>
+
+export default {
+  name: 'AboutView',
+  created() {
+      document.title = 'CMVP Movies Demo - About';
+  },
+}
+
+</script>

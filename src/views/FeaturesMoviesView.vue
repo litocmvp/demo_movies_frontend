@@ -206,6 +206,9 @@ const rutaBackend = process.env.VUE_APP_RUTA_API;
 
 export default {
     name: 'BasicFeatureMovieView',
+    created() {
+        document.title = 'CMVP Movies Demo - Basic Features';
+    },
     components: {
         NewBasicFutureMoviesComponetVue,
         Loading,
