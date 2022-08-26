@@ -65,23 +65,7 @@
           "code": 120,
           "template": 120,
           "tabWidth": 2,
-          "comments": 120,
-          "ignorePattern": "",
-          "ignoreComments": false,
-          "ignoreTrailingComments": false,
-          "ignoreUrls": false,
-          "ignoreStrings": false,
-          "ignoreTemplateLiterals": false,
-          "ignoreRegExpLiterals": false,
-          "ignoreHTMLAttributeValues": false,
-          "ignoreHTMLTextContents": false,
-          "prefer-destructuring": [
-            "error",
-            {
-              "object": true,
-              "array": false
-            }
-          ]
+          "comments": 120
         }
       ]
     }

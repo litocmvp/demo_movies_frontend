@@ -68,7 +68,7 @@
           </div>
           <div class="col-md-4 col-lg-4 col-xl-4 mx-auto">
             <h6 class="text-uppercase fw-bold mb-4">
-              <router-link class="text-decoration-none text-reset" to="/about">Acerca del Sitio Web</router-link>
+              <router-link class="text-decoration-none text-reset" to="/about">Acerca del Sitio</router-link>
             </h6>
           </div>
           <div class="col-md-4 col-lg-4 col-xl-4 mx-auto">
@@ -98,7 +98,7 @@
 
       <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
         © 2022 Todos los derechos reservados por:
-        <a class="text-reset fw-bold" href="https://www.cmvp.me">cmvp.me</a>
+        <a class="text-reset fw-bold" href="https://www.cmvp.me" target="_blank">cmvp.me</a>
       </div>
 
     </footer>
