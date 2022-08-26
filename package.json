@@ -63,7 +63,6 @@
         "error",
         {
           "code": 120,
-          "template": 120,
           "tabWidth": 2,
           "comments": 120
         }
