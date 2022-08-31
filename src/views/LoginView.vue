@@ -17,7 +17,7 @@
             :blur="vueLoading.blur"
         />
 
-        <div class="col-6">
+        <div class="col-12 col-md-6">
             <form v-on:submit.prevent="loginUser"
                 class="form-group m-4 p-3 rounded shadow-lg animate__animated animate__zoomIn animate__delay-1"
                 style="background-color: #263238;">

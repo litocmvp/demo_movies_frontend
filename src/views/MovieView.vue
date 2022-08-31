@@ -16,7 +16,7 @@
             :lock-scroll="true"
             :blur="vueLoading.blur"
         />
-        <div class="row mt-4 p-3 d-none d-md-block">
+        <div class="row mt-4 p-3 d-none d-sm-block">
             <div class="col-12">
                 <div class="card">
                     <youtube class="card-img" :video-id="preview" ref="youtube" :player-vars="playerVars" @playing="playing" v-if="preview != ''"></youtube>
@@ -36,11 +36,11 @@
         </div>
 
         <div class="row mt-4 p-3 d-block d-sm-none">
-            <div class="col-4 text-center">
+            <div class="col-12">
                 <img :src="picture" class="img-thumbnail" :alt="title">
             </div>
-            <div class="col-8">
-                <div><h2>{{title}}</h2></div>
+            <div class="col-12">
+                <div class="text-center"><h2>{{title}}</h2></div>
                 <p>{{plot}}</p>
                 <div>
                     <i class="bi bi-calendar mx-1"> {{year}}</i> | <i class="bi bi-clock mx-1"> {{time}}</i> | <i class="bi bi-person-video3 mx-1"> Clasificación {{rating}}</i> |

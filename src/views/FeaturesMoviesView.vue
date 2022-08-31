@@ -1,4 +1,5 @@
 <template>
+    <!-- eslint-disable -->
     <div>
 
         <loading :active="vueLoading.isLoading"
@@ -18,27 +19,20 @@
 
         <div class="row justify-content-center m-4">
             <div class="d-flex">
-                <!-- eslint-disable-next-line -->
                 <div class="d-inline mx-2"><h3 class="text-muted fst-italic text-cencer">Clasificaciones Cinematográficas</h3></div>
-                <!-- eslint-disable-next-line -->
                 <div class="d-inline mx-2"><i class="bi bi-caret-down-square" v-on:click="hidden('ratingbtn', 'ratingsbox')" role="button" id="ratingbtn" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Minimizar Sección"></i></div>
-                <!-- eslint-disable-next-line -->
                 <div class="d-inline mx-4" data-bs-toggle="modal" data-bs-target="#modalRating"><i class="bi bi-plus-circle" role="button" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Registrar Nueva Clasificación Cinematográfica"></i></div>
             </div>
 
             <div class="col-12">
                 <div class="row row-cols-1 row-cols-md-3 g-1 animate__animated" id="ratingsbox">
-                    <!-- eslint-disable-next-line -->
                     <div class="col hvr-grow" v-for="rating in ratings" :key="rating.id" v-scroll-reveal.reset="{ delay: 250 }">
                         <div class="card bg-dark text-white h-100 hovereffect">
-                            <!-- eslint-disable-next-line max-len -->
                             <img :src='rating.picture' class="card-img" alt="...">
                             <div class="card-img-overlay transbox">
                                 <h5 class="card-title">{{rating.rating}}</h5>
-                                <!-- eslint-disable-next-line max-len -->
                                 <p class="card-text">{{rating.description}}</p>
                                 <div class="overlay">
-                                    <!-- eslint-disable max-len -->
                                     <button type="button" class="btn btn-outline-warning mx-3" data-bs-toggle="modal" data-bs-target="#modalModify"
                                         v-on:click="modifyModel('titleLabel', 'Modificación de Clasificación Cinematográfica',
                                         'hiddenId', `rating/${rating.id}`,
@@ -62,27 +56,20 @@
 
         <div class="row justify-content-center m-4">
             <div class="d-flex">
-                <!-- eslint-disable-next-line -->
                 <div class="d-inline mx-2"><h3 class="text-muted fst-italic text-cencer">Géneros Cinematográficos</h3></div>
-                <!-- eslint-disable-next-line -->
                 <div class="d-inline mx-2"><i class="bi bi-caret-down-square" v-on:click="hidden('genderbtn', 'gendersbox')" role="button" id="genderbtn" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Minimizar Sección"></i></div>
-                <!-- eslint-disable-next-line -->
                 <div class="d-inline mx-4" data-bs-toggle="modal" data-bs-target="#modalGender"><i class="bi bi-plus-circle" role="button" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Registrar Nuevo Género Cinematográfico"></i></div>
             </div>
 
             <div class="col-12">
                 <div class="row row-cols-1 row-cols-md-3 g-1 animate__animated" id="gendersbox">
-                    <!-- eslint-disable-next-line max-len -->
                     <div class="col hvr-grow" v-for="gender in genders" :key="gender.id" v-scroll-reveal.reset="{ delay: 250 }">
                         <div class="card bg-dark text-white h-100 hovereffect">
-                            <!-- eslint-disable-next-line max-len -->
                             <img :src='gender.picture' class="card-img" alt="...">
                             <div class="card-img-overlay transbox">
                                 <h5 class="card-title">{{gender.gender}}</h5>
-                                <!-- eslint-disable-next-line max-len -->
                                 <p class="card-text">{{gender.description}}</p>
                                 <div class="overlay">
-                                    <!-- eslint-disable-next-line max-len -->
                                     <button type="button" class="btn btn-outline-warning mx-3" data-bs-toggle="modal" data-bs-target="#modalModify"
                                         v-on:click="modifyModel('titleLabel', 'Modificación de Género Cinematográfico',
                                         'hiddenId', `gender/${gender.id}`,
@@ -157,18 +144,36 @@ position:relative;
 cursor:default;
 }
 
-.hovereffect .overlay {
-width:100%;
-height:100%;
-position:absolute;
-overflow:hidden;
-text-align:center;
-top: 80%;
-left:0;
-opacity:0;
-background-color:rgba(0,0,0,0.5);
--webkit-transition:all .4s ease-in-out;
-transition:all .4s ease-in-out
+@media (min-width: 576px) {
+    .hovereffect .overlay {
+    width:100%;
+    height:100%;
+    position:absolute;
+    overflow:hidden;
+    text-align:center;
+    top: 80%;
+    left:0;
+    opacity:0;
+    background-color:rgba(0,0,0,0.5);
+    -webkit-transition:all .4s ease-in-out;
+    transition:all .4s ease-in-out
+    }
+}
+
+@media (max-width: 576px) {
+    .hovereffect .overlay {
+    width:100%;
+    height:100%;
+    position:absolute;
+    overflow:hidden;
+    text-align:center;
+    top: 40%;
+    left:0;
+    opacity:0;
+    background-color:rgba(0,0,0,0.5);
+    -webkit-transition:all .4s ease-in-out;
+    transition:all .4s ease-in-out
+    }
 }
 
 .hovereffect img {

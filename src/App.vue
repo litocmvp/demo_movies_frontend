@@ -3,45 +3,49 @@
    <!-- eslint-disable -->
   <div class="container-fluid d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="http://www.cmvp.me" target="_blank">CMVP</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+      <div class="container-fluid">
+        <a class="navbar-brand" href="http://www.cmvp.me" target="_blank">CMVP</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
           data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
-          aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <router-link class="nav-link" to="/"><i class="bi bi-house"> Inicio</i></router-link>
-              </li>
-              <li class="nav-item" v-if="this.$store.state.auth">
-                <router-link class="nav-link" to="/movies/features"><i class="bi bi-gear"> Ajustes</i></router-link>
-              </li>
-              <li class="nav-item" v-if="this.$store.state.auth">
-                <router-link class="nav-link" to="/my_movies"><i class="bi bi-film"> Registar Películas</i></router-link>
-              </li>
-              <li class="nav-item">
-                <router-link class="nav-link" to="/about"><i class="bi bi-info-square"> Acerca del Sitio</i></router-link>
-              </li>
-              <li class="nav-item">
-                <router-link class="nav-link" to="/auth/login" v-if="this.$store.state.user === 'Anonimo'"><i class="bi bi-door-open"> {{msg_userform}}</i></router-link>
-                <button class="nav-link btn btn-link" v-else v-on:click="logout"><i class="bi bi-door-closed"> Cerrar Sesión</i></button>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"><i class="bi bi-person"> {{this.$store.state.user}}</i></a>
-              </li>
-            </ul>
-          </div>
+          aria-label="Toggle navigation"
+          ref="btnToggler">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item item-toggler">
+              <router-link class="nav-link" to="/"><i class="bi bi-house"> Inicio</i></router-link>
+            </li>
+            <li class="nav-item item-toggler" v-if="this.$store.state.auth">
+              <router-link class="nav-link" to="/movies/features"><i class="bi bi-gear"> Ajustes</i></router-link>
+            </li>
+            <li class="nav-item item-toggler" v-if="this.$store.state.auth">
+              <router-link class="nav-link" to="/my_movies"><i class="bi bi-film"> Registar Películas</i></router-link>
+            </li>
+            <li class="nav-item item-toggler">
+              <router-link class="nav-link" to="/about"><i class="bi bi-info-square"> Acerca del Sitio</i></router-link>
+            </li>
+            <li class="nav-item item-toggler">
+              <router-link class="nav-link" to="/auth/login" v-if="this.$store.state.user === 'Anonimo'"><i class="bi bi-door-open"> {{msg_userform}}</i></router-link>
+              <button class="nav-link btn btn-link" v-else v-on:click="logout"><i class="bi bi-door-closed"> Cerrar Sesión</i></button>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"><i class="bi bi-person"> {{this.$store.state.user}}</i></a>
+            </li>
+          </ul>
         </div>
-      </nav>
+      </div>
+    </nav>
+
     <router-view/>
 
     <footer class="mt-auto text-center text-lg-start bg-light text-muted">
 
       <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
         <div class="me-5 d-none d-lg-block">
-          <img :src="cmvpLogo" alt="cmvp">
+          <a href="https://www.cmvp.me" target="_blank" class="text-decoration-none">
+            <img :src="cmvpLogo" alt="cmvp">
+          </a>
         </div>
         <div>
           <a href="https://twitter.com/LitoMario" target="_blank" class="me-4 text-reset">
@@ -123,13 +127,30 @@ export default {
     }
   },
   methods: {
-        logout() {
-            try {
-                auth.logout();
-            } catch (error) {
-                console.error(error);
-            }
-        },
+    logout() {
+        try {
+            auth.logout();
+        } catch (error) {
+            console.error(error);
+        }
     },
+    btnToggler() {
+      if (this.windowWidth < 992) {
+        const btn = this.$refs.btnToggler;
+        const itemMenu = document.querySelectorAll('.item-toggler');
+        Array.prototype.slice.call(itemMenu).forEach(function (item){
+          item.addEventListener('click', function handleClick() {
+            btn.click();
+          });
+        });
+      }
+    }
+  },
+  mounted() {
+    this.btnToggler();
+  },
+  updated() {
+    this.btnToggler();
+  },
 };
 </script>

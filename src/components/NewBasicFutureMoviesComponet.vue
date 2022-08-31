@@ -3,101 +3,91 @@
   <div class='modal fade' :id='modalID' tabindex='-1' :aria-labelledby='titleID' aria-hidden='true'>
     <div class='modal-dialog'>
       <div class='modal-content'>
-         <!-- Save Form -->
-        <form v-on:submit.prevent="saveData" v-if="btnAction === 'save'">
-            <div class='modal-header'>
-              <h5 class='modal-title' :id='titleID'>{{title}}</h5>
-              <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+        <div class='modal-header'>
+          <h5 class='modal-title' :id='titleID'>{{title}}</h5>
+          <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+        </div>
+        <div class='modal-body'>
+          <!-- Save Form -->
+          <form v-if="btnAction === 'save'" class="row">
+            <div class='mb-3 col-12'>
+              {{inputName}}
+              <input class='form-control form-control-sm' :id='inputNameID' :aria-label="inputNameID" ref='featureName' type='text' v-model.trim='$v.featureName.$model' :class="{ 'border': $v.featureName.$error, 'border-danger': $v.featureName.$error }">
+              <div class="text-danger" v-if="!$v.featureName.required">
+                ingrese el  Titulo
+              </div>
             </div>
-            <div class='modal-body'>
-                <div class='mb-3'>
-                    <label :for='inputNameID' class='form-label'>{{inputName}}
-                      <input class='form-control form-control-sm' :id='inputNameID' ref='featureName' type='text' v-model.trim='$v.featureName.$model' :class="{ 'border': $v.featureName.$error, 'border-danger': $v.featureName.$error }">
-                    </label>
-                    <div class="text-danger" v-if="!$v.featureName.required">
-                      ingrese el  Titulo
-                    </div>
-                </div>
-                <div class='mb-3'>
-                    <label :for='inputDescriptionID' class='form-label'>{{inputDescription}}
-                      <textarea class='form-control form-control-sm' :id='inputDescriptionID' ref='featureDescription' col="3" rows="3" v-model='$v.featureDescription.$model' :class="{ 'border': $v.featureDescription.$error, 'border-danger': $v.featureDescription.$error }"></textarea>
-                    </label>
-                    <div class="text-danger" v-if="!$v.featureDescription.required">
-                        ingrese la Descripción
-                    </div>
-                    <div class="text-danger" v-if="!$v.featureDescription.minLength || !$v.featureDescription.maxLength">
-                        la descripcion debe contener al menos {{$v.featureDescription.$params.minLength.min}} caracteres y maximo {{$v.featureDescription.$params.maxLength.max}}
-                    </div>
-                </div>
-                <div class='mb-3'>
-                    <label :for='inputPictureID' class='form-label'>{{inputPicture}}
-                      <input class='form-control form-control-sm' :id='inputPictureID' ref='featurePicture' type='text'  v-model.trim='$v.featurePicture.$model' :class="{ 'border': $v.featurePicture.$error, 'border-danger': $v.featurePicture.$error }">
-                    </label>
-                    <div>
-                      <img :src="srcImage" alt="preview_default" ref="imgPreview" width="200" height="auto">
-                    </div>
-                    <div class="text-danger" v-if="!$v.featurePicture.required">
-                        ingrese la URL de la imagen con relación al registro
-                    </div>
-                    <div class="text-danger" v-if="!$v.featurePicture.url">
-                        dirección URL erronea
-                    </div>
-                </div>
+            <div class='mb-3 col-12'>
+              {{inputDescription}}
+              <textarea class='form-control form-control-sm' :id='inputDescriptionID' :aria-label="inputDescriptionID" ref='featureDescription' col="3" rows="3" v-model='$v.featureDescription.$model' :class="{ 'border': $v.featureDescription.$error, 'border-danger': $v.featureDescription.$error }"></textarea>
+              <div class="text-danger" v-if="!$v.featureDescription.required">
+                  ingrese la Descripción
+              </div>
+              <div class="text-danger" v-if="!$v.featureDescription.minLength || !$v.featureDescription.maxLength">
+                  la descripcion debe contener al menos {{$v.featureDescription.$params.minLength.min}} caracteres y maximo {{$v.featureDescription.$params.maxLength.max}}
+              </div>
             </div>
-            <div class='modal-footer'>
-              <button type='button' class='btn btn-secondary' data-bs-dismiss='modal' :id='btnClose'>Cerrar</button>
-              <button type='submit' class='btn btn-primary' v-bind="buttonAttr">Guardar Registro</button>
+            <div class='mb-3 col-12'>
+              {{inputPicture}}
+              <input class='form-control form-control-sm' :id='inputPictureID' :aria-label="inputPictureID" ref='featurePicture' type='text'  v-model.trim='$v.featurePicture.$model' :class="{ 'border': $v.featurePicture.$error, 'border-danger': $v.featurePicture.$error }">
+              <div class="d-flex justify-content-center mt-1">
+                <img :src="srcImage" alt="preview_default" ref="imgPreview" width="200" height="auto">
+              </div>
+              <div class="text-danger" v-if="!$v.featurePicture.required">
+                  ingrese la URL de la imagen con relación al registro
+              </div>
+              <div class="text-danger" v-if="!$v.featurePicture.url">
+                  dirección URL erronea
+              </div>
             </div>
-        </form>
-        <!-- Modify Form -->
-        <form v-on:submit.prevent="modifyData" v-else>
-            <div class='modal-header'>
-              <h5 class='modal-title' :id='titleID'>{{title}}</h5>
-              <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+          </form>
+          <!-- Modify Form -->
+          <form v-else class="row">
+            <div class='mb-3 col-12'>
+              <input class='form-control form-control-sm' id='hiddenId' name='hiddenItem' type='hidden' v-model='featureId'>
             </div>
-            <div class='modal-body'>
-                <div class='mb-3'>
-                      <input class='form-control form-control-sm' id='hiddenId' name='hiddenItem' type='hidden' v-model='featureId'>
-                </div>
-                <div class='mb-3'>
-                    <label :for='inputNameID' class='form-label'>{{inputName}}
-                      <input class='form-control form-control-sm' :id='inputNameID' ref='featureName' type='text' v-model.trim='$v.featureName.$model' :class="{ 'border': $v.featureName.$error, 'border-danger': $v.featureName.$error }">
-                    </label>
-                    <div class="text-danger" v-if="!$v.featureName.required">
-                      ingrese el  Titulo
-                  </div>
-                </div>
-                <div class='mb-3'>
-                    <label :for='inputDescriptionID' class='form-label'>{{inputDescription}}
-                      <textarea class='form-control form-control-sm' :id='inputDescriptionID' ref='featureDescription' col="3" rows="3" v-model='$v.featureDescription.$model' :class="{ 'border': $v.featureDescription.$error, 'border-danger': $v.featureDescription.$error }"></textarea>
-                    </label>
-                    <div class="text-danger" v-if="!$v.featureDescription.required">
-                        ingrese la Descripción
-                    </div>
-                    <div class="text-danger" v-if="!$v.featureDescription.minLength || !$v.featureDescription.maxLength">
-                        la descripcion debe contener al menos {{$v.featureDescription.$params.minLength.min}} caracteres y maximo {{$v.featureDescription.$params.maxLength.max}}
-                    </div>
-                </div>
-                <div class='mb-3'>
-                    <label :for='inputPictureID' class='form-label'>{{inputPicture}}
-                      <input class='form-control form-control-sm' :id='inputPictureID' ref='featurePicture' type='text'  v-model.trim='$v.featurePicture.$model' :class="{ 'border': $v.featurePicture.$error, 'border-danger': $v.featurePicture.$error }">
-                    </label>
-                    <div>
-                      <img :src="srcImage" alt="preview_default" ref="imgPreview" width="200" height="auto">
-                    </div>
-                    <div class="text-danger" v-if="!$v.featurePicture.required">
-                        ingrese la URL de la imagen con relación al registro
-                    </div>
-                    <div class="text-danger" v-if="!$v.featurePicture.url">
-                        dirección URL erronea
-                    </div>
-                </div>
+            <div class='mb-3 col-12'>
+              {{inputName}}
+              <input class='form-control form-control-sm' :id='inputNameID' :aria-label="inputNameID" ref='featureName' type='text' v-model.trim='$v.featureName.$model' :class="{ 'border': $v.featureName.$error, 'border-danger': $v.featureName.$error }">
+              <div class="text-danger" v-if="!$v.featureName.required">
+                ingrese el  Titulo
+              </div>
             </div>
-            <div class='modal-footer'>
-              <button type='button' class='btn btn-secondary' data-bs-dismiss='modal' :id='btnClose'>Cerrar</button>
-              <button type='submit' class='btn btn-warning' v-bind="buttonAttr">Modificar Registro</button>
+            <div class='mb-3 col-12'>
+              {{inputDescription}}
+              <textarea class='form-control form-control-sm' :id='inputDescriptionID' :aria-label="inputDescriptionID" ref='featureDescription' col="3" rows="3" v-model='$v.featureDescription.$model' :class="{ 'border': $v.featureDescription.$error, 'border-danger': $v.featureDescription.$error }"></textarea>
+              <div class="text-danger" v-if="!$v.featureDescription.required">
+                  ingrese la Descripción
+              </div>
+              <div class="text-danger" v-if="!$v.featureDescription.minLength || !$v.featureDescription.maxLength">
+                  la descripcion debe contener al menos {{$v.featureDescription.$params.minLength.min}} caracteres y maximo {{$v.featureDescription.$params.maxLength.max}}
+              </div>
             </div>
-        </form>
+            <div class='mb-3 col-12'>
+              {{inputPicture}}
+              <input class='form-control form-control-sm' :id='inputPictureID' :aria-label="inputPictureID" ref='featurePicture' type='text'  v-model.trim='$v.featurePicture.$model' :class="{ 'border': $v.featurePicture.$error, 'border-danger': $v.featurePicture.$error }">
+              <div class="d-flex justify-content-center mt-1">
+                <img :src="srcImage" alt="preview_default" ref="imgPreview" width="200" height="auto">
+              </div>
+              <div class="text-danger" v-if="!$v.featurePicture.required">
+                  ingrese la URL de la imagen con relación al registro
+              </div>
+              <div class="text-danger" v-if="!$v.featurePicture.url">
+                  dirección URL erronea
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class='modal-footer'>
+          <div v-if="btnAction === 'save'">
+            <button type='button' class='btn btn-secondary mx-1' data-bs-dismiss='modal' :id='btnClose'>Cerrar</button>
+            <button type='submit' class='btn btn-primary mx-1' v-bind="buttonAttr" v-on:click="saveData">Guardar Registro</button>
+          </div>
+          <div v-else>
+            <button type='button' class='btn btn-secondary mx-1' data-bs-dismiss='modal' :id='btnClose'>Cerrar</button>
+            <button type='submit' class='btn btn-warning mx-1' v-bind="buttonAttr" v-on:click="modifyData">Modificar Registro</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -164,7 +154,7 @@ export default {
         featureDescription: {
             required,
             minLength: minLength(10),
-            maxLength: maxLength(60),
+            maxLength: maxLength(254),
         },
         featurePicture: {
             required,

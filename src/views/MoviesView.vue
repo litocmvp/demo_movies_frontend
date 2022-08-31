@@ -23,7 +23,7 @@
                 <div class="d-inline mx-2"><legend class="text-white" id="legendForm">Registro de Películas</legend></div>
                 <div class="d-inline mx-2"><i class="bi bi-caret-up-square" v-on:click="hidden('formBtn', 'formBox')" role="button" id="formBtn" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Minimizar Sección"></i></div>
             </div>
-            <form class="animate__animated p-2 bg-light border-end border-bottom border-start border-2 rounded-bottom shadow d-none" id="formBox">
+            <form class="animate__animated p-2 bg-light border-end border-bottom border-start border-2 rounded-bottom shadow d-none" id="formBox" ref="formBox">
                 <div class="mb-3">
                     <div class="input-group">
                         <i class="bi bi-pencil input-group-text"></i>
@@ -220,18 +220,36 @@ position:relative;
 cursor:default;
 }
 
-.hovereffect .overlay {
-width:100%;
-height:100%;
-position:absolute;
-overflow:hidden;
-text-align:center;
-top: 80%;
-left:0;
-opacity:0;
-background-color:rgba(0,0,0,0.5);
--webkit-transition:all .4s ease-in-out;
-transition:all .4s ease-in-out
+@media (min-width: 576px) {
+    .hovereffect .overlay {
+    width:100%;
+    height:100%;
+    position:absolute;
+    overflow:hidden;
+    text-align:center;
+    top: 80%;
+    left:0;
+    opacity:0;
+    background-color:rgba(0,0,0,0.5);
+    -webkit-transition:all .4s ease-in-out;
+    transition:all .4s ease-in-out
+    }
+}
+
+@media (max-width: 576px) {
+    .hovereffect .overlay {
+    width:100%;
+    height:100%;
+    position:absolute;
+    overflow:hidden;
+    text-align:center;
+    top: 40%;
+    left:0;
+    opacity:0;
+    background-color:rgba(0,0,0,0.5);
+    -webkit-transition:all .4s ease-in-out;
+    transition:all .4s ease-in-out
+    }
 }
 
 .hovereffect img {
@@ -438,13 +456,9 @@ export default {
                 formBtn.click();
             }
 
-            if (btnSave.classList.contains('d-none')) { // Comprobar si el btn de salvar datos aun es visible
-                btnSave.classList.remove('d-none');
-                btnUpdate.classList.add('d-none');
-            } else {
-                btnSave.classList.add('d-none');
-                btnUpdate.classList.remove('d-none');
-            }
+            btnSave.classList.add('d-none');
+            btnUpdate.classList.remove('d-none');
+
 
             this.mine = mine
             const films = mine ? this.myMovies : this.otherMovies;
@@ -467,6 +481,10 @@ export default {
                     break bucle;
                 }
             }
+            this.$refs.formBox.scrollIntoView(false, {
+                block: 'start',
+                behavior: 'smooth',
+            });
         },
         async updateMovie() {
             if (!this.title || this.title?.length == 0) {

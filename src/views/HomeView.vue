@@ -26,7 +26,7 @@
       </div>
     </section>
     <div class="row justify-content-center">
-      <div class="col-3">
+      <div class="col-6 col-md-3">
         <div class="input-group mb-3">
           <select class="form-select" aria-label="Default select example"
             @input="event => searchBy = event.target.value">
@@ -39,7 +39,7 @@
           <span class="input-group-text"><i class="bi bi-search"></i></span>
         </div>
       </div>
-      <div class="col-3" v-if="searchBy != ''">
+      <div class="col-6 col-md-3" v-if="searchBy != ''">
         <div class="input-group mb-3" v-if="searchBy == '1'">
           <select class="form-select" aria-label="rating" @change="value = $event.target.value">
             <option selected hidden>- Seleccione -</option>
